@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="event_list_main_image_padding">10dp</dimen>
+    <dimen name="detail_top_bar_height">500dp</dimen>
+</resources>
