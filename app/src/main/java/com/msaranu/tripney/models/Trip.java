@@ -55,12 +55,12 @@ public class Trip extends ParseObject implements Parcelable {
     };
 
     public String getmId() {
-        return  getString("mId");
+        return  getString("_id");
     }
 
     public void setmId(String mId) {
         this.mId=mId;
-        this.put("mId",mId);
+        this.put("_id",mId);
     }
 
     public String getmName() {

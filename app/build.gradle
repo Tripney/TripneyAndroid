@@ -31,6 +31,7 @@ dependencies {
 
 
 
+
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:26.+'
@@ -42,11 +43,10 @@ dependencies {
     compile 'com.android.support:design:26.+'
     compile 'com.makeramen:roundedimageview:2.3.0'
     compile 'com.jakewharton:butterknife:8.4.0'
-    testCompile 'junit:junit:4.12'
-    annotationProcessor 'org.parceler:parceler:1.1.6'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.parse.bolts:bolts-android:1.4.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
     compile 'com.parse:parse-android:1.16.5'
-
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'org.parceler:parceler:1.1.6'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 }

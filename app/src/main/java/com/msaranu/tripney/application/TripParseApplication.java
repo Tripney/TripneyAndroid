@@ -2,6 +2,7 @@ package com.msaranu.tripney.application;
 
 import android.app.Application;
 
+import com.msaranu.tripney.models.Event;
 import com.msaranu.tripney.models.Expense;
 import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.models.User;
@@ -27,6 +28,7 @@ public class TripParseApplication extends Application {
         ParseObject.registerSubclass(Trip.class);
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Wish.class);
+        ParseObject.registerSubclass(Event.class);
 
         // Use for troubleshooting -- remove this line for production
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);

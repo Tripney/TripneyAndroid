@@ -13,17 +13,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.adapters.TripRecyclerAdapter;
 import com.msaranu.tripney.fragments.AddTripFragment;
 import com.msaranu.tripney.models.Trip;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainTripActivity extends AppCompatActivity implements AddTripFragment.AddTripFragmentDialogListener {
     private DrawerLayout mDrawer;
@@ -35,6 +41,7 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
     TextView tvNavUserName;
     ArrayList<Trip> trips;
     TripRecyclerAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,17 +96,35 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
 
     private void setRecyclerView() {
 
+        trips = new ArrayList<Trip>();
+
         //recycler view
         RecyclerView rvTrips = (RecyclerView) findViewById(R.id.rvTrips);
 
-        // Initialize contacts
-        trips = Trip.createTempTrips(20);
-        // Create adapter passing in the sample user data
         adapter = new TripRecyclerAdapter(this, trips);
         // Attach the adapter to the recyclerview to populate items
         rvTrips.setAdapter(adapter);
         // Set layout manager to position the items
         rvTrips.setLayoutManager(new LinearLayoutManager(this));
+
+        // Initialize contacts
+        //trips = Trip.createTempTrips(20);
+        // Define the class we would like to query
+        ParseQuery<Trip> query = ParseQuery.getQuery(Trip.class);
+        // Execute the find asynchronously
+        query.findInBackground(new FindCallback<Trip>() {
+            public void done(List<Trip> itemList, ParseException e) {
+                if (e == null) {
+                    for(Trip trip : itemList){
+                        trips.add(trip);
+                    }
+                    Toast.makeText(MainTripActivity.this, "Message", Toast.LENGTH_SHORT).show();
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Log.d("item", "Error: " + e.getMessage());
+                }
+            }
+        });
     }
 
 
