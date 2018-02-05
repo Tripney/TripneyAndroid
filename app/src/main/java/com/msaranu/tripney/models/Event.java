@@ -3,13 +3,16 @@ package com.msaranu.tripney.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 import java.util.ArrayList;
 
 /**
  * Created by msaranu on 2/3/18.
  */
-@org.parceler.Parcel
-public class Event implements Parcelable{
+@ParseClassName("Event")
+public class Event extends ParseObject implements Parcelable{
 
     String eventID;
     String tripID;

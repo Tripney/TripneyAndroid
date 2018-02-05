@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.msaranu.tripney.fragments.TripDetailFragment;
 import com.msaranu.tripney.fragments.TripExpensesFragment;
 import com.msaranu.tripney.fragments.TripThingsToDoFragment;
+import com.msaranu.tripney.fragments.TripWishListFragment;
 import com.msaranu.tripney.models.Trip;
 
 /**
@@ -15,7 +16,7 @@ import com.msaranu.tripney.models.Trip;
 
 
 public class TripDetailPagerAdapter extends FragmentPagerAdapter {
-    private String tabTitles[] = {"DETAILS", "EXPENSES","THINGS TO DO"};
+    private String tabTitles[] = {"DETAILS", "THINGS TO DO","WISH LIST","EXPENSES"};
     Trip trip;
 
     public TripDetailPagerAdapter(FragmentManager fragmentManager) {
@@ -39,10 +40,12 @@ public class TripDetailPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0: // Fragment # 0 - This will show FirstFragment
                 return TripDetailFragment.newInstance(trip);
-            case 1: // Fragment # 0 - This will show FirstFragment different title
-                return TripExpensesFragment.newInstance(trip);
-            case 2: // Fragment # 1 - This will show SecondFragment
+            case 1: // Fragment # 1 - This will show SecondFragment
                 return TripThingsToDoFragment.newInstance(trip);
+            case 2: // Fragment # 0 - This will show FirstFragment different title
+                return TripWishListFragment.newInstance(trip);
+            case 3: // Fragment # 0 - This will show FirstFragment different title
+                return TripExpensesFragment.newInstance(trip);
             default:
                 return null;
         }

@@ -3,19 +3,24 @@ package com.msaranu.tripney.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 import java.util.ArrayList;
 
 /**
  * Created by msaranu on 1/14/18.
  */
-@org.parceler.Parcel
-public class Trip implements Parcelable {
-          String mId;
-          String mName;
-          String mDate;
-          String mStatus;
-          String mbckgrndUrl;
-          String mDescription;
+@ParseClassName("Trip")
+public class Trip extends ParseObject implements Parcelable {
+
+
+    public String mId;
+    public  String mName;
+    public   String mDate;
+    public String mStatus;
+    public String mbckgrndUrl;
+    public String mDescription;
 
 
     public Trip(String id, String name, String desc, String date, String status, String url){
@@ -50,51 +55,57 @@ public class Trip implements Parcelable {
     };
 
     public String getmId() {
-        return mId;
+        return  getString("mId");
     }
 
     public void setmId(String mId) {
-        this.mId = mId;
+        this.mId=mId;
+        this.put("mId",mId);
     }
 
     public String getmName() {
-        return mName;
+        return  getString("mName");
     }
 
     public void setmName(String mName) {
         this.mName = mName;
+        this.put("mName",mName);
     }
 
     public String getmDate() {
-        return mDate;
+        return  getString("mDate");
     }
 
     public void setmDate(String mDate) {
         this.mDate = mDate;
+        this.put("mDate", mDate);
     }
 
     public String getmStatus() {
-        return mStatus;
+        return  getString("mStatus");
     }
 
     public void setmStatus(String mStatus) {
         this.mStatus = mStatus;
+        this.put("mStatus", mStatus);
     }
 
     public String getMbckgrndUrl() {
-        return mbckgrndUrl;
+        return  getString("mbckgrndUrl");
     }
 
     public void setMbckgrndUrl(String mbckgrndUrl) {
         this.mbckgrndUrl = mbckgrndUrl;
+        this.put("mbckgrndUrl", mbckgrndUrl);
     }
 
     public String getmDescription() {
-        return mDescription;
+        return  getString("mDescription");
     }
 
     public void setmDescription(String mDescription) {
         this.mDescription = mDescription;
+        this.put("mDescription", mDescription);
     }
 
     public Trip(){

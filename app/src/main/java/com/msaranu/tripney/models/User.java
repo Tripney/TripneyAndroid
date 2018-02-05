@@ -2,13 +2,14 @@ package com.msaranu.tripney.models;
 
 import android.os.Parcelable;
 
-import org.parceler.Parcel;
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
 
 /**
  * Created by msaranu on 2/3/18.
  */
-@Parcel
-public class User implements Parcelable{
+@ParseClassName("User")
+public class User extends ParseObject implements Parcelable{
 
     String userID;
     String firstName;

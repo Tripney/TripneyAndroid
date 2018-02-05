@@ -76,6 +76,7 @@ public class AddTripFragment extends DialogFragment {
                 trip.setmDescription(tripDescripton.getText().toString());
                 trip.setmDate(tripDate.getText().toString());
                 trip.setmStatus(tripStatus.getText().toString());
+                trip.saveInBackground();
                 AddTripFragmentDialogListener addTripFragmentDialogListener =
                         (AddTripFragmentDialogListener) getActivity();
                 addTripFragmentDialogListener.onFinishEditDialog(trip);
