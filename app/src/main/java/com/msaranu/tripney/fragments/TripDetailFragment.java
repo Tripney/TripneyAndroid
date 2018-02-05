@@ -56,10 +56,10 @@ public class TripDetailFragment extends android.support.v4.app.Fragment {
         fragmentDetailTripBinding =  DataBindingUtil.inflate(inflater,R.layout.fragment_detail_trip, parent, false);
         View view = fragmentDetailTripBinding.getRoot();
         ButterKnife.bind(this, view);
-        fragmentDetailTripBinding.tvTripDate.setText(trip.getmDate());
-        fragmentDetailTripBinding.tvTripDescription.setText(trip.getmDescription());
-        fragmentDetailTripBinding.tvTripName.setText(trip.getmName());
-        fragmentDetailTripBinding.tvTripStatus.setText(trip.getmStatus());
+        fragmentDetailTripBinding.tvTripDate.setText(trip.mDate);
+        fragmentDetailTripBinding.tvTripDescription.setText(trip.mDescription);
+        fragmentDetailTripBinding.tvTripName.setText(trip.mName);
+        fragmentDetailTripBinding.tvTripStatus.setText(trip.mStatus);
 
         Glide.with(this).load(R.drawable.eventimage)
                 .fitCenter()

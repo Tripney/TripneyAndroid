@@ -97,19 +97,20 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
     private void setRecyclerView() {
 
         trips = new ArrayList<Trip>();
+        // Initialize contacts
+      //  trips = Trip.createTempTrips(20);
+
+       // trips.add(new Trip("300", "Yellow Stone"," It is awesome", "01-01-2010", "NEW", "blahhhhhh URL"));
 
         //recycler view
         RecyclerView rvTrips = (RecyclerView) findViewById(R.id.rvTrips);
 
         adapter = new TripRecyclerAdapter(this, trips);
-        // Attach the adapter to the recyclerview to populate items
         rvTrips.setAdapter(adapter);
-        // Set layout manager to position the items
         rvTrips.setLayoutManager(new LinearLayoutManager(this));
 
-        // Initialize contacts
-        //trips = Trip.createTempTrips(20);
-        // Define the class we would like to query
+
+
         ParseQuery<Trip> query = ParseQuery.getQuery(Trip.class);
         // Execute the find asynchronously
         query.findInBackground(new FindCallback<Trip>() {

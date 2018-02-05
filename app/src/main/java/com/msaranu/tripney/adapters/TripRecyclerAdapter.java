@@ -40,7 +40,7 @@ public class TripRecyclerAdapter extends
 
         mRecyclerView = recyclerView;
     }
-    // Easy access to the context object in the recyclerview
+
     private Context getContext() {
         return mContext;
     }
@@ -99,14 +99,14 @@ public class TripRecyclerAdapter extends
     @Override
     public void onBindViewHolder(TripRecyclerAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
-        Trip Trip = mTrips.get(position);
+        Trip trip = mTrips.get(position);
 
         // Set item views based on your views and data model
 
-        viewHolder.binding.tvTripName.setText(Trip.getmName());  // setVariable(BR.user, user) would also work
-        viewHolder.binding.tvTripDate.setText(Trip.getmDate());
-        viewHolder.binding.tvTripDescriptom.setText(Trip.getmDescription());
-        viewHolder.binding.tvTripStatus.setText(Trip.getmStatus());
+        viewHolder.binding.tvTripName.setText(trip.get("mName").toString());  // setVariable(BR.user, user) would also work
+        viewHolder.binding.tvTripDate.setText(trip.get("mDate").toString());
+        viewHolder.binding.tvTripDescriptom.setText(trip.get("mDescription").toString());
+        viewHolder.binding.tvTripStatus.setText(trip.get("mStatus").toString());
 
 
                        Glide.with(mContext).load(R.drawable.eventimage)

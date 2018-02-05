@@ -88,7 +88,7 @@ public class AddEventFragment extends DialogFragment {
                 event.setType(eventType.getText().toString());
                 event.setDate(eventDate.getText().toString());
                 event.setPrice(Double.parseDouble(eventPrice.getText().toString()));
-                event.setTripID(trip.getmId());
+                event.setTripID(trip._id);
 
                 event.saveInBackground();
                 AddEventFragmentDialogListener addEventFragmentDialogListener =

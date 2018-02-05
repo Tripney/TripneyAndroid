@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Trip extends ParseObject implements Parcelable {
 
 
-    public String mId;
+    public String _id;
     public  String mName;
     public   String mDate;
     public String mStatus;
@@ -24,7 +24,7 @@ public class Trip extends ParseObject implements Parcelable {
 
 
     public Trip(String id, String name, String desc, String date, String status, String url){
-        mId =id;
+        _id =id;
         mName=name;
         mDescription=desc;
         mDate=date;
@@ -34,7 +34,7 @@ public class Trip extends ParseObject implements Parcelable {
 
 
     protected Trip(Parcel in) {
-        mId = in.readString();
+        _id = in.readString();
         mName = in.readString();
         mDate = in.readString();
         mStatus = in.readString();
@@ -54,13 +54,13 @@ public class Trip extends ParseObject implements Parcelable {
         }
     };
 
-    public String getmId() {
-        return  getString("_id");
+    public String get_id() {
+        return  getObjectId();
     }
 
-    public void setmId(String mId) {
-        this.mId=mId;
-        this.put("_id",mId);
+    public void set_id(String _id) {
+        this._id=_id;
+        this.put("_id",_id);
     }
 
     public String getmName() {
@@ -112,6 +112,14 @@ public class Trip extends ParseObject implements Parcelable {
 
     }
 
+    public void loadInstanceVariables(){
+        _id = getObjectId();
+        mName = getString("mName");
+        mDescription = getString("mDescription");
+        mDate = getString("mDate");
+        mStatus = getString("mStatus");
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -119,7 +127,8 @@ public class Trip extends ParseObject implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(mId);
+        loadInstanceVariables();
+        parcel.writeString(_id);
         parcel.writeString(mName);
         parcel.writeString(mDate);
         parcel.writeString(mStatus);

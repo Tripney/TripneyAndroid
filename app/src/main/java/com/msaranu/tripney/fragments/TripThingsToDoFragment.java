@@ -81,7 +81,7 @@ public class TripThingsToDoFragment extends android.support.v4.app.Fragment impl
     }
     @Override
     public void onFinishEditDialog(Event event) {
-        events.add(event);
+        events.add(0,event);//insert at the beginning
         adapter.notifyDataSetChanged();
     }
 
@@ -104,9 +104,10 @@ public class TripThingsToDoFragment extends android.support.v4.app.Fragment impl
 
         //recycler view
         RecyclerView rvEvents = (RecyclerView) view.findViewById(R.id.rvEvents);
+        events = new ArrayList<Event>();
 
         // Initialize contacts
-        events = Event.createTempEvents(20);
+        //events = Event.createTempEvents(20);
         //TODO: pass tripID and get corresponding events
         // Create adapter passing in the sample user data
          adapter = new EventRecyclerAdapter(this.getContext(), events);
@@ -115,10 +116,11 @@ public class TripThingsToDoFragment extends android.support.v4.app.Fragment impl
         // Set layout manager to position the items
         rvEvents.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        events = new ArrayList<Event>();
 
         ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
-        query.whereEqualTo("_id", trip.getmId());
+        String tripID = trip._id;
+        query.whereEqualTo("tripID", tripID);
+        query.orderByDescending("_created_at");
         // Execute the find asynchronously
         query.findInBackground(new FindCallback<Event>() {
             public void done(List<Event> itemList, ParseException e) {

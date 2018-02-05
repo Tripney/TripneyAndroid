@@ -137,11 +137,11 @@ public class EventRecyclerAdapter extends
 
     private void configureViewHolderAlternate(ViewHolderAlternate viewHolder, Event event) {
 
-        viewHolder.binding.tvEventName.setText(event.getName());  // setVariable(BR.user, user) would also work
-        viewHolder.binding.tvEventLocation.setText(event.getLocation());
-        viewHolder.binding.tvEventDuration.setText(event.getDuration());
-        viewHolder.binding.tvEventType.setText(event.getType());
-        viewHolder.binding.tvEventPrice.setText(Double.toString(event.getPrice()));
+        viewHolder.binding.tvEventName.setText(event.get("name").toString());  // setVariable(BR.user, user) would also work
+        viewHolder.binding.tvEventLocation.setText(event.get("location").toString());
+        viewHolder.binding.tvEventDuration.setText(event.get("duration").toString());
+        viewHolder.binding.tvEventType.setText(event.get("type").toString());
+        viewHolder.binding.tvEventPrice.setText(event.get("price").toString());
 
         Glide.with(mContext).load(R.drawable.eventimage)
                 .fitCenter()
@@ -150,11 +150,11 @@ public class EventRecyclerAdapter extends
 
     private void configureViewHolder(ViewHolder viewHolder, Event event) {
 
-        viewHolder.binding.tvEventName.setText(event.getName());  // setVariable(BR.user, user) would also work
-        viewHolder.binding.tvEventLocation.setText(event.getLocation());
-        viewHolder.binding.tvEventDuration.setText(event.getDuration());
-        viewHolder.binding.tvEventType.setText(event.getType());
-        viewHolder.binding.tvEventPrice.setText(Double.toString(event.getPrice()));
+        viewHolder.binding.tvEventName.setText(event.get("name").toString());  // setVariable(BR.user, user) would also work
+        viewHolder.binding.tvEventLocation.setText(event.get("location").toString());
+        viewHolder.binding.tvEventDuration.setText(event.get("duration").toString());
+        viewHolder.binding.tvEventType.setText(event.get("type").toString());
+        viewHolder.binding.tvEventPrice.setText(event.get("price").toString());
 
         Glide.with(mContext).load(R.drawable.eventimage)
                 .fitCenter()
