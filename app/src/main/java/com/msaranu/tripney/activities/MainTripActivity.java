@@ -27,6 +27,7 @@ import com.msaranu.tripney.models.Trip;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +113,7 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
 
 
         ParseQuery<Trip> query = ParseQuery.getQuery(Trip.class);
+        query.whereEqualTo("mUserID", ParseUser.getCurrentUser().getObjectId());
         // Execute the find asynchronously
         query.findInBackground(new FindCallback<Trip>() {
             public void done(List<Trip> itemList, ParseException e) {
@@ -168,7 +170,7 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
                 i = new Intent(this, MainTripActivity.class);
                 break;
             case R.id.nav_second_fragment:
-                i = new Intent(this, UserProfile.class);
+                i = new Intent(this, UserProfileActivity.class);
                 break;
             default:
                 i = new Intent(this, MainTripActivity.class);

@@ -21,6 +21,7 @@ public class User extends ParseObject implements Parcelable{
     String city;
     String state;
     String zip;
+    String profilePicture;
 
     public User(){}
 
@@ -35,6 +36,7 @@ public class User extends ParseObject implements Parcelable{
         city = in.readString();
         state = in.readString();
         zip = in.readString();
+        profilePicture = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -49,85 +51,120 @@ public class User extends ParseObject implements Parcelable{
         }
     };
 
-    public String getUserID() {
-        return userID;
+
+    public void loadInstanceVariables() {
+        userID = getString("userID");
+        firstName = getString("firstName");
+        lastName = getString("lastName");
+        email = getString("email");
+        phone = getString("phone");
+        address1 = getString("address1");
+        address2 = getString("address2");
+        city = getString("city");
+        state = getString("state");
+        zip = getString("zip");
+        profilePicture = getString("profilePicture");
+    }
+        public String getUserID() {
+        return getString("userID");
     }
 
     public void setUserID(String userID) {
         this.userID = userID;
+        this.put("userID",userID);
     }
 
     public String getFirstName() {
-        return firstName;
+        return getString("firstName");
     }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+        this.put("firstName", firstName);
     }
 
     public String getLastName() {
-        return lastName;
+        return getString("lastName");
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+        this.put("lastName", lastName);
     }
 
     public String getEmail() {
-        return email;
+        return getString("email");
     }
 
     public void setEmail(String email) {
         this.email = email;
+        this.put("email",email);
     }
 
     public String getPhone() {
-        return phone;
+        return getString("phone");
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
+        this.put("phone",phone);
     }
 
     public String getAddress1() {
-        return address1;
+        return getString("address1");
     }
 
     public void setAddress1(String address1) {
         this.address1 = address1;
+        this.put("address1", address1);
     }
 
     public String getAddress2() {
-        return address2;
+        return getString("address2");
     }
 
     public void setAddress2(String address2) {
         this.address2 = address2;
+        this.put("address2", address2);
     }
 
     public String getCity() {
-        return city;
+        return getString("city");
     }
 
     public void setCity(String city) {
         this.city = city;
+        this.put("city",city);
     }
 
     public String getState() {
-        return state;
+        return getString("state");
     }
 
     public void setState(String state) {
         this.state = state;
+        this.put("state",state);
     }
 
     public String getZip() {
-        return zip;
+        return getString("zip");
     }
 
     public void setZip(String zip) {
         this.zip = zip;
+        this.put("zip", zip);
     }
+
+
+    public String getProfilePicture() {
+        return getString("profilePicture");
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+        this.put("profilePicture", profilePicture);
+    }
+
 
     @Override
     public int describeContents() {
@@ -146,5 +183,6 @@ public class User extends ParseObject implements Parcelable{
         parcel.writeString(city);
         parcel.writeString(state);
         parcel.writeString(zip);
+        parcel.writeString(profilePicture);
     }
 }

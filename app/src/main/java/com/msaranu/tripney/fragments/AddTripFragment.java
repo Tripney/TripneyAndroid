@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.models.Trip;
+import com.parse.ParseUser;
 
 
 public class AddTripFragment extends DialogFragment {
@@ -76,6 +77,7 @@ public class AddTripFragment extends DialogFragment {
                 trip.setmDescription(tripDescripton.getText().toString());
                 trip.setmDate(tripDate.getText().toString());
                 trip.setmStatus(tripStatus.getText().toString());
+                trip.setmUserID(ParseUser.getCurrentUser().getObjectId());
                 trip.saveInBackground();
                 AddTripFragmentDialogListener addTripFragmentDialogListener =
                         (AddTripFragmentDialogListener) getActivity();

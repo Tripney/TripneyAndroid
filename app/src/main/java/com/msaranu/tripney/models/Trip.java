@@ -21,6 +21,7 @@ public class Trip extends ParseObject implements Parcelable {
     public String mStatus;
     public String mbckgrndUrl;
     public String mDescription;
+    public String mUserID;
 
 
     public Trip(String id, String name, String desc, String date, String status, String url){
@@ -40,6 +41,7 @@ public class Trip extends ParseObject implements Parcelable {
         mStatus = in.readString();
         mbckgrndUrl = in.readString();
         mDescription = in.readString();
+        mUserID = in.readString();
     }
 
     public static final Creator<Trip> CREATOR = new Creator<Trip>() {
@@ -108,6 +110,15 @@ public class Trip extends ParseObject implements Parcelable {
         this.put("mDescription", mDescription);
     }
 
+    public String getmUserID() {
+        return getString("mUserID");
+    }
+
+    public void setmUserID(String mUserID) {
+        this.mUserID = mUserID;
+        this.put("mUserID", mUserID);
+    }
+
     public Trip(){
 
     }
@@ -118,6 +129,7 @@ public class Trip extends ParseObject implements Parcelable {
         mDescription = getString("mDescription");
         mDate = getString("mDate");
         mStatus = getString("mStatus");
+        mUserID=getString("mUserID");
     }
 
     @Override
@@ -134,6 +146,7 @@ public class Trip extends ParseObject implements Parcelable {
         parcel.writeString(mStatus);
         parcel.writeString(mbckgrndUrl);
         parcel.writeString(mDescription);
+        parcel.writeString(mUserID);
     }
 
     static int triplast=0;
