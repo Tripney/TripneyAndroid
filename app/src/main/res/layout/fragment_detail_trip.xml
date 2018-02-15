@@ -2,6 +2,14 @@
 <layout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+       <data>
+
+            <variable
+                name="Trip"
+                type="com.msaranu.tripney.models.Trip" />
+
+       </data>
+
 <android.support.design.widget.CoordinatorLayout
     android:id="@+id/main_content"
     android:layout_width="match_parent"
@@ -53,66 +61,238 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
-            android:id="@+id/llFragments"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="@color/white"
+            android:clipToPadding="false"
+            android:paddingTop="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp">
 
-
-            <TextView
-                android:id="@+id/tvTripDate"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/llHeader"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:text="01/01"
-                android:textSize="20sp" />
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.5">
+
+                    <TextView
+                        android:id="@+id/tvTripMonth"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="MAY"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="10sp" />
 
 
-            <TextView
-                android:id="@+id/tvTripName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/tvTripDate"
-                android:text="TripName"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tvTripMDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="10"
+                        android:layout_below="@id/tvTripMonth"
+                        android:textColor="@color/twitterBlue"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tvTripName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="4.0"
+                    android:text='Trip Name'
+                    android:textColor="@color/colorBlack"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
 
-            <TextView
-                android:id="@+id/tvTripLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvTripName"
-                android:layout_alignLeft="@id/tvTripName"
-                android:text="Location"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
+                <ImageButton
+                    android:id="@+id/ivFavoriteIcon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorWhite"
+                    android:layout_weight="0.5"
+                    app:srcCompat="@drawable/ic_favorite_grey" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/spView00"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/llHeader"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginEnd="-10dp"
+                android:layout_marginStart="-10dp"
+                android:background="@color/veryLightGrey" />
 
 
             <TextView
                 android:id="@+id/tvTripDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/spView00"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text=""
+                android:textColor="@color/colorBlack"
+                android:textSize="13sp" />
+
+            <View
+                android:id="@+id/spView01"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_below="@id/tvTripDescription"
+                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="-10dp"
+                android:layout_marginStart="-10dp"
+                android:background="@color/veryLightGrey" />
+
+            <ImageView
+                android:id="@+id/ivClockIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/spView01"
+                android:layout_marginEnd="3dp"
+                app:srcCompat="@drawable/ic_clock" />
+
+            <TextView
+                android:id="@+id/tvTripDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/ivClockIcon"
+                android:layout_below="@id/spView01"
+                android:layout_marginEnd="10dp"
+                android:layout_toEndOf="@id/ivClockIcon"
+                android:layout_toStartOf="@+id/ivCalendar"
+                android:textColor="@color/greySecondaryText"
+                android:textStyle="bold"
+                android:text=''
+                android:textSize="13sp" />
+
+
+            <ImageView
+                android:id="@+id/ivCalendar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@id/spView01"
+                android:layout_toStartOf="@+id/tvCalendar"
+                android:layout_marginEnd="3dp"
+                app:srcCompat="@drawable/ic_date_range" />
+
+            <TextView
+                android:id="@+id/tvCalendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvTripLocation"
-                android:layout_alignLeft="@id/tvTripName"
-                android:text="TripDescription"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
+                android:layout_alignTop="@id/ivClockIcon"
+                android:layout_below="@id/spView01"
+                android:layout_toStartOf="@+id/ivRedirect"
+                android:layout_marginEnd="15dp"
+                android:clickable="true"
+                android:text="Add to Calendar"
+                android:textColor="@color/twitterBlue"
+                android:textSize="13sp" />
+
+            <ImageButton
+                android:id="@+id/ivRedirect"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@color/colorWhite"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/spView01"
+                app:srcCompat="@drawable/ic_link" />
+
+            <ImageView
+                android:id="@+id/ivLocationIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/ivClockIcon"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="3dp"
+                app:srcCompat="@drawable/ic_location_pin" />
 
             <TextView
                 android:id="@+id/tvTripStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvTripDescription"
-                android:layout_alignStart="@id/tvTripDescription"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:layout_marginBottom="20dp"
-                android:text="Trip Status"
-                android:textSize="10sp" />
+                android:layout_alignTop="@id/ivLocationIcon"
+                android:layout_below="@id/ivLocationIcon"
+                android:layout_marginBottom="5dp"
+                android:layout_toRightOf="@id/ivLocationIcon"
+                android:text=''
+                android:textColor="@color/black"
+                android:textSize="13sp" />
 
+
+            <View
+                android:id="@+id/spView03"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_below="@id/tvTripStatus"
+                android:layout_marginEnd="-10dp"
+                android:layout_marginStart="-10dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/veryLightGrey" />
+
+            <TextView
+            android:id="@+id/tvTripLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/ivLocationIcon"
+            android:layout_below="@id/ivClockIcon"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/ivLocationIcon"
+            android:text=''
+            android:textColor="@color/black"
+            android:textSize="13sp" />
+
+
+            <View
+                android:id="@+id/spView02"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_below="@id/tvTripLocation"
+                android:layout_marginEnd="-10dp"
+                android:layout_marginStart="-10dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/veryLightGrey" />
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapEBView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@id/spView02"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp" />
+
+
+            <View
+                android:id="@+id/spView04"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/mapEBView"
+                android:layout_marginEnd="-10dp"
+                android:layout_marginStart="-10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/veryLightGrey" />
 
 
         </RelativeLayout>

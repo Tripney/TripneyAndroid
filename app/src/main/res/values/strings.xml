@@ -19,7 +19,6 @@
     <string name="adapter_date_string_format">yyyy-MM-dd HH:mm:ss</string>
     <string name="facebook_app_id">209657622867468</string>
     <string name="google_maps_api_key">AIzaSyAE1Bq6joAc6Msp27pakdXxJEB5KVs_HL4</string>
-    <string name="eventbrite_api_key">IMWD66EDBK2PQIUKRK4K</string>
     <string name="btn_cancel">Back</string>
     <string name="btn_next">Next</string>
     <string name="btn_done">Done</string>

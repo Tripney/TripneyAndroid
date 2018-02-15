@@ -22,6 +22,7 @@ public class Trip extends ParseObject implements Parcelable {
     public String mbckgrndUrl;
     public String mDescription;
     public String mUserID;
+    public String mlocation;
 
 
     public Trip(String id, String name, String desc, String date, String status, String url){
@@ -42,7 +43,9 @@ public class Trip extends ParseObject implements Parcelable {
         mbckgrndUrl = in.readString();
         mDescription = in.readString();
         mUserID = in.readString();
+        mlocation = in.readString();
     }
+
 
     public static final Creator<Trip> CREATOR = new Creator<Trip>() {
         @Override
@@ -110,6 +113,16 @@ public class Trip extends ParseObject implements Parcelable {
         this.put("mDescription", mDescription);
     }
 
+
+    public String getmLocation() {
+        return  getString("mlocation");
+    }
+
+    public void setmLocation(String mlocation) {
+        this.mlocation = mlocation;
+        this.put("mlocation", mlocation);
+    }
+
     public String getmUserID() {
         return getString("mUserID");
     }
@@ -130,23 +143,27 @@ public class Trip extends ParseObject implements Parcelable {
         mDate = getString("mDate");
         mStatus = getString("mStatus");
         mUserID=getString("mUserID");
+        mlocation=getString("mlocation");
+
+
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        loadInstanceVariables();
+        dest.writeString(_id);
+        dest.writeString(mName);
+        dest.writeString(mDate);
+        dest.writeString(mStatus);
+        dest.writeString(mbckgrndUrl);
+        dest.writeString(mDescription);
+        dest.writeString(mUserID);
+        dest.writeString(mlocation);
     }
 
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        loadInstanceVariables();
-        parcel.writeString(_id);
-        parcel.writeString(mName);
-        parcel.writeString(mDate);
-        parcel.writeString(mStatus);
-        parcel.writeString(mbckgrndUrl);
-        parcel.writeString(mDescription);
-        parcel.writeString(mUserID);
     }
 
     static int triplast=0;
