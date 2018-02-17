@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_trip_detail"
+        android:enabled="true"
+        android:icon="@drawable/ic_trip_detail"
+        android:title="@string/trip"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_trip_events"
+        android:enabled="true"
+        android:icon="@drawable/ic_trip_events"
+        android:title="@string/events"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_wish_list"
+        android:enabled="true"
+        android:icon="@drawable/ic_wish_list"
+        android:title="@string/wishlist"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_expenses"
+        android:enabled="true"
+        android:icon="@drawable/ic_expenses"
+        android:title="@string/expenese"
+        app:showAsAction="ifRoom" />
+</menu>
