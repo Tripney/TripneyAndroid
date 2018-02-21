@@ -49,10 +49,25 @@ public class Event extends ParseObject implements Parcelable{
         duration = in.readString();
         type = in.readString();
         date = in.readString();
+        price = in.readDouble();
+    }
+
+    public void loadInstanceVariables(){
+        eventID = getObjectId();
+        tripID = getString("tripID");
+        name = getString("name");
+        location = getString("location");
+        duration = getString("duration");
+        type = getString("type");
+        date=getString("date");
+        price=getDouble("price");
+
+
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        loadInstanceVariables();
         dest.writeString(eventID);
         dest.writeString(tripID);
         dest.writeString(name);
@@ -160,5 +175,7 @@ public class Event extends ParseObject implements Parcelable{
         this.tripID = tripID;
         this.put("tripID",tripID);
     }
+
+
 
 }

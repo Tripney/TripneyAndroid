@@ -1,13 +1,344 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.msaranu.tripney.fragments.EventDetailFragment">
+<?xml version="1.0" encoding="utf-8"?>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <variable
+            name="Event"
+            type="com.msaranu.tripney.models.Event" />
+
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:fitsSystemWindows="true">
 
-</FrameLayout>
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_top_bar_height"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme"
+            app:elevation="0dp">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleMarginEnd="64dp"
+                app:expandedTitleMarginStart="48dp"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+
+                <ImageView
+                    android:id="@+id/ivEventBckgrndImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    app:layout_collapseMode="parallax" />
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@android:color/transparent"
+                    app:layout_collapseMode="pin"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:popupTheme="@style/AppTheme.AppBarOverlay" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:clipToPadding="false"
+                android:paddingTop="20dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
+
+                <LinearLayout
+                    android:id="@+id/llHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="0.5">
+
+                        <TextView
+                            android:id="@+id/tvEventMonth"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="MAY"
+                            android:layout_centerHorizontal="true"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="10sp" />
+
+
+                        <TextView
+                            android:id="@+id/tvEventMDay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:text="10"
+                            android:layout_below="@id/tvEventMonth"
+                            android:textColor="@color/twitterBlue"
+                            android:textSize="20sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/tvEventName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="4.0"
+                        android:text='Event Name'
+                        android:textColor="@color/colorBlack"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                    <ImageButton
+                        android:id="@+id/ivEditIcon"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/colorWhite"
+                        android:layout_weight="0.5"
+                        app:srcCompat="@drawable/ic_edit" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/spView00"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/llHeader"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="-10dp"
+                    android:layout_marginStart="-10dp"
+                    android:background="@color/veryLightGrey" />
+
+
+                <TextView
+                    android:id="@+id/tvEventDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/spView00"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text=""
+                    android:textColor="@color/colorBlack"
+                    android:textSize="13sp" />
+
+                <View
+                    android:id="@+id/spView01"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_below="@id/tvEventDescription"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="-10dp"
+                    android:layout_marginStart="-10dp"
+                    android:background="@color/veryLightGrey" />
+
+                <ImageView
+                    android:id="@+id/ivClockIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/spView01"
+                    android:layout_marginEnd="3dp"
+                    app:srcCompat="@drawable/ic_clock" />
+
+                <TextView
+                    android:id="@+id/tvEventDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/ivClockIcon"
+                    android:layout_below="@id/spView01"
+                    android:layout_marginEnd="10dp"
+                    android:layout_toEndOf="@id/ivClockIcon"
+                    android:layout_toStartOf="@+id/ivCalendar"
+                    android:textColor="@color/greySecondaryText"
+                    android:textStyle="bold"
+                    android:text=''
+                    android:textSize="13sp" />
+
+
+                <ImageView
+                    android:id="@+id/ivCalendar"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_below="@id/spView01"
+                    android:layout_toStartOf="@+id/tvCalendar"
+                    android:layout_marginEnd="3dp"
+                    app:srcCompat="@drawable/ic_date_range" />
+
+                <TextView
+                    android:id="@+id/tvCalendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/ivClockIcon"
+                    android:layout_below="@id/spView01"
+                    android:layout_toStartOf="@+id/ivRedirect"
+                    android:layout_marginEnd="15dp"
+                    android:clickable="true"
+                    android:text="Add to Calendar"
+                    android:textColor="@color/twitterBlue"
+                    android:textSize="13sp" />
+
+                <ImageButton
+                    android:id="@+id/ivRedirect"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@color/colorWhite"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/spView01"
+                    app:srcCompat="@drawable/ic_link" />
+
+                <ImageView
+                    android:id="@+id/ivLocationIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/ivClockIcon"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="3dp"
+                    app:srcCompat="@drawable/ic_location_pin" />
+
+                <TextView
+                    android:id="@+id/tvEventDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/ivLocationIcon"
+                    android:layout_below="@id/ivLocationIcon"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toRightOf="@id/ivLocationIcon"
+                    android:text=''
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+
+                <View
+                    android:id="@+id/spView03"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_below="@id/tvEventDuration"
+                    android:layout_marginEnd="-10dp"
+                    android:layout_marginStart="-10dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/veryLightGrey" />
+
+                <TextView
+                    android:id="@+id/tvEventLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/ivLocationIcon"
+                    android:layout_below="@id/ivClockIcon"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toRightOf="@id/ivLocationIcon"
+                    android:text=''
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <View
+                    android:id="@+id/spView05"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_below="@id/tvEventDuration"
+                    android:layout_marginEnd="-10dp"
+                    android:layout_marginStart="-10dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/veryLightGrey" />
+
+                <TextView
+                    android:id="@+id/tvEventType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/ivLocationIcon"
+                    android:layout_below="@id/tvEventLocation"
+                    android:layout_marginBottom="5dp"
+                    android:text=''
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <View
+                    android:id="@+id/spView06"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_below="@id/tvEventType"
+                    android:layout_marginEnd="-10dp"
+                    android:layout_marginStart="-10dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/veryLightGrey" />
+
+                <TextView
+                    android:id="@+id/tvEventPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/ivLocationIcon"
+                    android:layout_below="@id/tvEventType"
+                    android:layout_marginBottom="5dp"
+                    android:text=''
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <View
+                    android:id="@+id/spView02"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_below="@id/tvEventPrice"
+                    android:layout_marginEnd="-10dp"
+                    android:layout_marginStart="-10dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/veryLightGrey" />
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapEBView"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_below="@id/spView02"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp" />
+
+
+                <View
+                    android:id="@+id/spView04"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_below="@id/mapEBView"
+                    android:layout_marginEnd="-10dp"
+                    android:layout_marginStart="-10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/veryLightGrey" />
+
+
+            </RelativeLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

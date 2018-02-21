@@ -1,6 +1,8 @@
 package com.msaranu.tripney.adapters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,8 @@ import com.msaranu.tripney.R;
 import com.msaranu.tripney.databinding.ItemEventAlternateBinding;
 import com.msaranu.tripney.databinding.ItemEventBinding;
 import com.msaranu.tripney.decorators.ItemClickSupport;
+import com.msaranu.tripney.fragments.EventDetailFragment;
+import com.msaranu.tripney.fragments.TripThingsToDoFragment;
 import com.msaranu.tripney.models.Event;
 
 import java.util.List;
@@ -20,19 +24,21 @@ import java.util.List;
  */
 
 public class EventRecyclerAdapter extends
-        RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     public final int even=2;
     public final int odd =1;
     RecyclerView mRecyclerView;
+    TripThingsToDoFragment tripThingsToDoFragment;
     // Store a member variable for the contacts
     private List<Event> mEvents;
     // Store the context for easy access
     private Context mContext;
     // Pass in the contact array into the constructor
-    public EventRecyclerAdapter(Context context, List<Event> events) {
+    public EventRecyclerAdapter(Context context, List<Event> events, TripThingsToDoFragment tripThingsToDoFragment) {
         mEvents = events;
         mContext = context;
+        this.tripThingsToDoFragment = tripThingsToDoFragment;
     }
 
 
@@ -100,9 +106,27 @@ public class EventRecyclerAdapter extends
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        //  Toast.makeText(getContext(), "Detailed Event not yet available",
-                        //          Toast.LENGTH_LONG).show();
-                       //CALL fragment modal to view event detail
+                        /*Intent i = new Intent(getContext(), DetailEventActivity.class);
+                        i.putExtra("event_obj", mEvents.get(position));
+                        getContext().startActivity(i);*/
+
+
+                        final FragmentManager fragmentManager = tripThingsToDoFragment.getActivity().getSupportFragmentManager();
+                        final FragmentTransaction fragmentTripDetail = fragmentManager.beginTransaction();
+                        fragmentTripDetail.replace(R.id.flContainer, EventDetailFragment.newInstance(mEvents.get(position))).commit();
+
+
+                        /*Fragment fragment =  EventDetailFragment.newInstance(mEvents.get(position));
+                        Bundle args = new Bundle();
+                       // args.putString("event_obj", "This data has sent to FragmentTwo");
+                        fragment.setArguments(args);
+                        FragmentTransaction transaction = tripThingsToDoFragment.getActivity().getSupportFragmentManager().
+                                beginTransaction();
+                        transaction.replace(R.id.flContainer, fragment);
+                        //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        transaction.addToBackStack(null);
+                        transaction.commit();*/
+
                     }
                 }
         );

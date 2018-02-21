@@ -67,5 +67,6 @@
     <string name="events">Trip Events</string>
     <string name="wishlist">Trip Wish List</string>
     <string name="expenese">Expenses</string>
+    <string name="title_activity_detail_event">DetailEventActivity</string>
 </resources>
 

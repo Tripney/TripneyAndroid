@@ -77,11 +77,11 @@ public class TripWishListFragment extends android.support.v4.app.Fragment {
         events = Event.createTempEvents(20);
         //TODO: pass tripID and get corresponding events
         // Create adapter passing in the sample user data
-        EventRecyclerAdapter adapter = new EventRecyclerAdapter(this.getContext(), events);
+     //   EventRecyclerAdapter adapter = new EventRecyclerAdapter(this.getContext(), events, TripWishListFragment.this);
         // Attach the adapter to the recyclerview to populate items
-        rvEvents.setAdapter(adapter);
+       // rvEvents.setAdapter(adapter);
         // Set layout manager to position the items
-        rvEvents.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        //rvEvents.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
 
 }
