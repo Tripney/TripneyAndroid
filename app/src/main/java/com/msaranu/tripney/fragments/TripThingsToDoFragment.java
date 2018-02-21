@@ -110,7 +110,7 @@ public class TripThingsToDoFragment extends android.support.v4.app.Fragment impl
         //events = Event.createTempEvents(20);
         //TODO: pass tripID and get corresponding events
         // Create adapter passing in the sample user data
-         adapter = new EventRecyclerAdapter(this.getContext(), events);
+         adapter = new EventRecyclerAdapter(this.getContext(), events, TripThingsToDoFragment.this);
         // Attach the adapter to the recyclerview to populate items
         rvEvents.setAdapter(adapter);
         // Set layout manager to position the items

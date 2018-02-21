@@ -3,18 +3,13 @@ package com.msaranu.tripney.activities;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.astuetz.PagerSlidingTabStrip;
 import com.msaranu.tripney.R;
-import com.msaranu.tripney.adapters.TripDetailPagerAdapter;
-import com.msaranu.tripney.fragments.EventDetailFragment;
 import com.msaranu.tripney.fragments.TripDetailFragment;
 import com.msaranu.tripney.fragments.TripThingsToDoFragment;
 import com.msaranu.tripney.fragments.TripWishListFragment;
@@ -23,9 +18,17 @@ import com.msaranu.tripney.models.Trip;
 public class DetailTripActivity extends AppCompatActivity {
     FragmentPagerAdapter adapterViewPager;
     Trip trip;
+    int itemId;
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // itemId=R.id.action_trip_detail;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_trip);
         Bundle extras = getIntent().getExtras();
@@ -33,6 +36,11 @@ public class DetailTripActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
         trip = extras.getParcelable("trip_obj");
+       // if(extras.getParcelable("item_id") !=null){
+       //     itemId  = extras.getInt("item_id");
+       // }
+       // bottomNavigationView.setSelectedItemId(itemId);
+
 
         //Default Load
         final FragmentTransaction fragmentTripDetail = fragmentManager.beginTransaction();
