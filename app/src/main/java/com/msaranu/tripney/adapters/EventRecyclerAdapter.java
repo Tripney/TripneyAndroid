@@ -117,8 +117,7 @@ public class EventRecyclerAdapter extends
                         final FragmentTransaction fragmentTripDetail = fragmentManager.beginTransaction();
                         fragmentTripDetail.replace(R.id.flContainer, EventDetailFragment.newInstance(mEvents.get(position))).commit();
 
-
-                        /*
+                     /*
                         FragmentManager fm = tripThingsToDoFragment.getActivity().getSupportFragmentManager();
                         EventDetailFragment editEventDialogFragment =EventDetailFragment.
                                                                             newInstance(mEvents.get(position));
@@ -126,6 +125,16 @@ public class EventRecyclerAdapter extends
                         editEventDialogFragment.setTargetFragment((Fragment)tripThingsToDoFragment, 300);
 
                         editEventDialogFragment.show(fm, "fragment_edit_event");*/
+                        /*Fragment fragment =  EventDetailFragment.newInstance(mEvents.get(position));
+                        Bundle args = new Bundle();
+                       // args.putString("event_obj", "This data has sent to FragmentTwo");
+                        fragment.setArguments(args);
+                        FragmentTransaction transaction = tripThingsToDoFragment.getActivity().getSupportFragmentManager().
+                                beginTransaction();
+                        transaction.replace(R.id.flContainer, fragment);
+                        //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        transaction.addToBackStack(null);
+                        transaction.commit();*/
                     }
                 }
         );
