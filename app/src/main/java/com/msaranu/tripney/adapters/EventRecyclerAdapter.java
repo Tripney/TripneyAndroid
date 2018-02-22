@@ -1,6 +1,7 @@
 package com.msaranu.tripney.adapters;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import com.msaranu.tripney.R;
 import com.msaranu.tripney.databinding.ItemEventAlternateBinding;
 import com.msaranu.tripney.databinding.ItemEventBinding;
 import com.msaranu.tripney.decorators.ItemClickSupport;
+import com.msaranu.tripney.fragments.EditEventDialogFragment;
 import com.msaranu.tripney.fragments.EventDetailFragment;
 import com.msaranu.tripney.fragments.TripThingsToDoFragment;
 import com.msaranu.tripney.models.Event;
@@ -116,17 +118,14 @@ public class EventRecyclerAdapter extends
                         fragmentTripDetail.replace(R.id.flContainer, EventDetailFragment.newInstance(mEvents.get(position))).commit();
 
 
-                        /*Fragment fragment =  EventDetailFragment.newInstance(mEvents.get(position));
-                        Bundle args = new Bundle();
-                       // args.putString("event_obj", "This data has sent to FragmentTwo");
-                        fragment.setArguments(args);
-                        FragmentTransaction transaction = tripThingsToDoFragment.getActivity().getSupportFragmentManager().
-                                beginTransaction();
-                        transaction.replace(R.id.flContainer, fragment);
-                        //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        transaction.addToBackStack(null);
-                        transaction.commit();*/
+                        /*
+                        FragmentManager fm = tripThingsToDoFragment.getActivity().getSupportFragmentManager();
+                        EventDetailFragment editEventDialogFragment =EventDetailFragment.
+                                                                            newInstance(mEvents.get(position));
 
+                        editEventDialogFragment.setTargetFragment((Fragment)tripThingsToDoFragment, 300);
+
+                        editEventDialogFragment.show(fm, "fragment_edit_event");*/
                     }
                 }
         );

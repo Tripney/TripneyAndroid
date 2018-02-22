@@ -24,9 +24,13 @@ public class AddEventFragment extends DialogFragment {
     private EditText eventType;
     private EditText eventPrice;
     private EditText eventDate;
+
     private Button save;
     Event event;
     Trip trip;
+    Boolean isWishList=false;
+    public static final String WISH_LIST = "wish";
+
 
     public AddEventFragment() {
         // Empty constructor is required for DialogFragment
@@ -34,10 +38,11 @@ public class AddEventFragment extends DialogFragment {
         // Use `newInstance` instead as shown below
     }
 
-    public static AddEventFragment newInstance(Trip trip) {
+    public static AddEventFragment newInstance(Trip trip, boolean isWishList) {
         AddEventFragment frag = new AddEventFragment();
         Bundle args = new Bundle();
         args.putParcelable("trip", trip);
+        args.putBoolean(WISH_LIST, isWishList);
         frag.setArguments(args);
         return frag;
     }
@@ -60,6 +65,8 @@ public class AddEventFragment extends DialogFragment {
 
         // Fetch arguments from bundle and set
          trip = getArguments().getParcelable("trip");
+         isWishList = getArguments().getBoolean(WISH_LIST);
+
 
         // Get field from view
         eventName = (EditText) view.findViewById(R.id.etEventName);
@@ -89,6 +96,8 @@ public class AddEventFragment extends DialogFragment {
                 event.setDate(eventDate.getText().toString());
                 event.setPrice(Double.parseDouble(eventPrice.getText().toString()));
                 event.setTripID(trip._id);
+                if(isWishList) event.setIsWish("Y");
+                else event.setIsWish("");
 
                 event.saveInBackground();
                 AddEventFragmentDialogListener addEventFragmentDialogListener =

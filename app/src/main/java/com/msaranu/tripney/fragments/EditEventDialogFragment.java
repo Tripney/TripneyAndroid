@@ -40,6 +40,7 @@ public class EditEventDialogFragment extends DialogFragment {
     public static EditEventDialogFragment newInstance(Event event) {
         EditEventDialogFragment frag = new EditEventDialogFragment();
         Bundle args = new Bundle();
+        event.loadInstanceVariables();
         args.putParcelable("event", event);
         frag.setArguments(args);
         return frag;

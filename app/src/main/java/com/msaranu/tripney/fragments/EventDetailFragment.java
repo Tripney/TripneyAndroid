@@ -4,16 +4,22 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Point;
 import android.location.Criteria;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 
 import com.bumptech.glide.Glide;
@@ -274,7 +280,7 @@ public class EventDetailFragment extends android.support.v4.app.Fragment impleme
     @Override
     public void onFinishEditDialog(Event event) {
         this.event = event;
-        getFragmentManager().beginTransaction().
+       getFragmentManager().beginTransaction().
                 replace(R.id.flContainer, EventDetailFragment.newInstance(event)).commit();
     }
 }

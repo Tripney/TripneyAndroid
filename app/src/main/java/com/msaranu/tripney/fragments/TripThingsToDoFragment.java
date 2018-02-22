@@ -39,6 +39,10 @@ public class TripThingsToDoFragment extends android.support.v4.app.Fragment impl
         AddEventFragment.AddEventFragmentDialogListener {
 
     public static final String TRIP_OBJECT = "trip_obj";
+    public static final String WISH_LIST = "wish";
+
+    boolean isWishList = false;
+
     Event event;
     Trip trip;
     ArrayList<Event> events;
@@ -52,10 +56,11 @@ public class TripThingsToDoFragment extends android.support.v4.app.Fragment impl
     }
 
 
-    public static TripThingsToDoFragment newInstance(Trip trip) {
+    public static TripThingsToDoFragment newInstance(Trip trip, Boolean isWishList) {
         TripThingsToDoFragment tripDetailFragment = new TripThingsToDoFragment();
         Bundle args = new Bundle();
         args.putParcelable(TRIP_OBJECT, trip);
+        args.putBoolean(WISH_LIST, isWishList);
         tripDetailFragment.setArguments(args);
         return tripDetailFragment;
     }
@@ -65,6 +70,7 @@ public class TripThingsToDoFragment extends android.support.v4.app.Fragment impl
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         trip = getArguments().getParcelable(TRIP_OBJECT);
+        isWishList =  getArguments().getBoolean(WISH_LIST);
     }
 
 
@@ -91,7 +97,7 @@ public class TripThingsToDoFragment extends android.support.v4.app.Fragment impl
             public void onClick(View v) {
 
                 FragmentManager fm = getFragmentManager();
-                AddEventFragment editNameDialogFragment = AddEventFragment.newInstance(trip);
+                AddEventFragment editNameDialogFragment = AddEventFragment.newInstance(trip, isWishList);
                 editNameDialogFragment.setTargetFragment(TripThingsToDoFragment.this, 300);
                 editNameDialogFragment.show(fm, "fragment_edit_name");
 
@@ -120,7 +126,17 @@ public class TripThingsToDoFragment extends android.support.v4.app.Fragment impl
         ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
         String tripID = trip._id;
         query.whereEqualTo("tripID", tripID);
-        query.orderByDescending("_created_at");
+        if(isWishList)
+        {
+            query.whereEqualTo("isWish", "Y");
+        }
+        else {
+            query.whereEqualTo("isWish", "");
+
+        }
+       query.orderByDescending("_created_at");
+
+
         // Execute the find asynchronously
         query.findInBackground(new FindCallback<Event>() {
             public void done(List<Event> itemList, ParseException e) {

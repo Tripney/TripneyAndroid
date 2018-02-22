@@ -41,7 +41,7 @@ public class TripDetailPagerAdapter extends FragmentPagerAdapter {
             case 0: // Fragment # 0 - This will show FirstFragment
                 return TripDetailFragment.newInstance(trip);
             case 1: // Fragment # 1 - This will show SecondFragment
-                return TripThingsToDoFragment.newInstance(trip);
+                return TripThingsToDoFragment.newInstance(trip, true);
             case 2: // Fragment # 0 - This will show FirstFragment different title
                 return TripWishListFragment.newInstance(trip);
             case 3: // Fragment # 0 - This will show FirstFragment different title

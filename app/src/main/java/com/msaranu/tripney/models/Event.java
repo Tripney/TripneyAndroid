@@ -19,10 +19,11 @@ public class Event extends ParseObject implements Parcelable{
     public String name;
     public String location;
     public String duration;
-
     public String type;
     public String date;
     public Double price;
+    public String isWish;
+
 
     public Event(){
 
@@ -37,6 +38,7 @@ public class Event extends ParseObject implements Parcelable{
         this.type=type;
         this.price=price;
         this.date=date;
+        this.isWish=isWish;
     }
 
     static int eventno=0;
@@ -61,6 +63,8 @@ public class Event extends ParseObject implements Parcelable{
         type = getString("type");
         date=getString("date");
         price=getDouble("price");
+        isWish=getString("isWish");
+
 
 
     }
@@ -75,6 +79,9 @@ public class Event extends ParseObject implements Parcelable{
         dest.writeString(duration);
         dest.writeString(type);
         dest.writeString(date);
+        dest.writeString(isWish);
+        dest.writeDouble(price);
+
     }
 
     @Override
@@ -176,6 +183,12 @@ public class Event extends ParseObject implements Parcelable{
         this.put("tripID",tripID);
     }
 
+    public String getIsWish() {
+        return getString("isWish");
+    }
 
-
+    public void setIsWish(String isWish) {
+        this.isWish = isWish;
+        this.put("isWish", isWish);
+    }
 }

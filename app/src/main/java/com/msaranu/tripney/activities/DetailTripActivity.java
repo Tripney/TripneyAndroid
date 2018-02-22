@@ -58,11 +58,11 @@ public class DetailTripActivity extends AppCompatActivity {
                                 return true;
                             case R.id.action_trip_events:
                                 final FragmentTransaction fragmentTripEvents = fragmentManager.beginTransaction();
-                                fragmentTripEvents.replace(R.id.flContainer, TripThingsToDoFragment.newInstance(trip)).commit();
+                                fragmentTripEvents.replace(R.id.flContainer, TripThingsToDoFragment.newInstance(trip, false)).commit();
                                 return true;
                             case R.id.action_wish_list:
                                 final FragmentTransaction fragmentWishList = fragmentManager.beginTransaction();
-                                fragmentWishList.replace(R.id.flContainer, TripWishListFragment.newInstance(trip)).commit();
+                                fragmentWishList.replace(R.id.flContainer, TripThingsToDoFragment.newInstance(trip, true)).commit();
                                 return true;
 
                             case R.id.action_expenses:
