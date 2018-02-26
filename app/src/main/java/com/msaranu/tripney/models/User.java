@@ -173,6 +173,7 @@ public class User extends ParseObject implements Parcelable{
 
     @Override
     public void writeToParcel(android.os.Parcel parcel, int i) {
+        loadInstanceVariables();
         parcel.writeString(userID);
         parcel.writeString(firstName);
         parcel.writeString(lastName);

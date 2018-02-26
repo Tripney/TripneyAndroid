@@ -6,6 +6,7 @@ import com.msaranu.tripney.models.Event;
 import com.msaranu.tripney.models.Expense;
 import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.models.User;
+import com.msaranu.tripney.models.UserFriend;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -32,6 +33,8 @@ public class TripneyApplication extends Application {
         ParseObject.registerSubclass(Trip.class);
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Event.class);
+        ParseObject.registerSubclass(UserFriend.class);
+
 
         // Use for troubleshooting -- remove this line for production
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);

@@ -22,4 +22,5 @@
     <dimen name="sign_up_edt_text_margin_top">20dp</dimen>
     <dimen name="dialog_width">900dp</dimen>
     <dimen name="dialog_height">900dp</dimen>
+    <dimen name="toolbarHeight">50dp</dimen>
 </resources>

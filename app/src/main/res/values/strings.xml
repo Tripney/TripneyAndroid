@@ -68,5 +68,12 @@
     <string name="wishlist">Trip Wish List</string>
     <string name="expenese">Expenses</string>
     <string name="title_activity_detail_event">DetailEventActivity</string>
+    <string name="trip_name">Name</string>
+    <string name="trip_date">Date</string>
+    <string name="trip_desc">Description</string>
+    <string name="trip_location">Location</string>
+    <string name="trip_add_friends">Add Friends</string>
+    <string name="title_activity_add_new_friends">AddNewFriendsActivity</string>
+
 </resources>
 

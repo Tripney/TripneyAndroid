@@ -11,6 +11,17 @@
             android:icon="@drawable/ic_item"
             android:title="User Profile" />
 
+        <item
+            android:id="@+id/nav_third_fragment"
+            android:icon="@drawable/ic_item"
+            android:title="Add New Friends" />
+
+        <item
+            android:id="@+id/nav_fourth_fragment"
+            android:icon="@drawable/ic_item"
+            android:title="Some thing New" />
+
+
         <item android:title="Sub items">
         <menu>
             <group android:checkableBehavior="single">

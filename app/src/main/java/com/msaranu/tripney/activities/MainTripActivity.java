@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.adapters.TripRecyclerAdapter;
+import com.msaranu.tripney.fragments.AddNewFriendsFragment;
 import com.msaranu.tripney.fragments.AddTripFragment;
 import com.msaranu.tripney.models.Trip;
 import com.parse.FindCallback;
@@ -171,6 +172,9 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
                 break;
             case R.id.nav_second_fragment:
                 i = new Intent(this, UserProfileActivity.class);
+                break;
+            case R.id.nav_third_fragment:
+                i = new Intent(this, AddNewFriendsActivity.class);
                 break;
             default:
                 i = new Intent(this, MainTripActivity.class);
