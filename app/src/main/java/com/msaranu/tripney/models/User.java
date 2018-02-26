@@ -65,7 +65,7 @@ public class User extends ParseObject implements Parcelable{
         zip = getString("zip");
         profilePicture = getString("profilePicture");
     }
-        public String getUserID() {
+    public String getUserID() {
         return getString("userID");
     }
 

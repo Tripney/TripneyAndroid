@@ -3,37 +3,35 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_first_fragment"
-            android:icon="@drawable/ic_item"
-            android:title="Settings" />
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="Home" />
         <item
-            android:id="@+id/nav_second_fragment"
-            android:icon="@drawable/ic_item"
+            android:id="@+id/nav_user_profile"
+            android:icon="@drawable/ic_user_profile"
             android:title="User Profile" />
 
         <item
-            android:id="@+id/nav_third_fragment"
-            android:icon="@drawable/ic_item"
+            android:id="@+id/nav_add_friends"
+            android:icon="@drawable/ic_add_friend"
             android:title="Add New Friends" />
 
         <item
-            android:id="@+id/nav_fourth_fragment"
-            android:icon="@drawable/ic_item"
-            android:title="Some thing New" />
+            android:id="@+id/nav_notifications"
+            android:icon="@drawable/ic_notifications"
+            android:title="Notifications" />
+
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help"
+            android:title="Get Help" />
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="Settings" />
 
 
-        <item android:title="Sub items">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:icon="@drawable/ic_item"
-                    android:title="Sub item 1" />
-                <item
-                    android:icon="@drawable/ic_item"
-                    android:title="Sub item 2" />
-            </group>
-        </menu>
-        </item>
     </group>
 
     </menu>

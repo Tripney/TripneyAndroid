@@ -18,6 +18,7 @@ import com.msaranu.tripney.databinding.FragmentUserProfileBinding;
 import com.msaranu.tripney.models.User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -151,6 +152,7 @@ public class UserService {
 
     public User retriveUserFromParseUser(ParseUser pUser) {
         User user = new User();
+
         if (pUser != null) {
             if (pUser.get("firstName") != null) {
                 user.setFirstName(pUser.get("firstName").toString());

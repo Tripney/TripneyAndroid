@@ -33,7 +33,7 @@
     <string name="menu_filter">Filter</string>
     <string name="drawer_menu_signout">Sign Out</string>
     <string name="drawer_menu_signin">Sign In</string>
-    <string name="guest_name">Guest User</string>
+    <string name="guest_name">Guest _User</string>
     <string name="search">Search</string>
 
     <string name="login_username">Username</string>

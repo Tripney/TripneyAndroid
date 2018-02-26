@@ -1,28 +1,25 @@
 package com.msaranu.tripney.adapters;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.databinding.ItemEventAlternateBinding;
-import com.msaranu.tripney.databinding.ItemEventBinding;
 import com.msaranu.tripney.databinding.ItemPersonBinding;
 import com.msaranu.tripney.decorators.ItemClickSupport;
 import com.msaranu.tripney.fragments.AddNewFriendsFragment;
-import com.msaranu.tripney.fragments.EditEventDialogFragment;
-import com.msaranu.tripney.fragments.EventDetailFragment;
-import com.msaranu.tripney.fragments.TripThingsToDoFragment;
-import com.msaranu.tripney.models.Event;
-import com.msaranu.tripney.models.User;
 import com.msaranu.tripney.models.UserFriend;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.List;
@@ -41,6 +38,7 @@ public class SearchAddFriendsAdapter extends
     private List<ParseUser> mPeople;
     // Store the context for easy access
     private Context mContext;
+
 
     // Pass in the contact array into the constructor
     public SearchAddFriendsAdapter(Context context, List<ParseUser> people, AddNewFriendsFragment addNewFriendsFragment) {
@@ -103,7 +101,7 @@ public class SearchAddFriendsAdapter extends
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                            AddFriendToUser(mPeople.get(position), v);
+                           // AddFriendToUser(mPeople.get(position), v);
                     }
                 }
         );
@@ -114,11 +112,93 @@ public class SearchAddFriendsAdapter extends
 
     private void AddFriendToUser(ParseUser friend, View v) {
         UserFriend uFriend = new UserFriend();
-        uFriend.setUserID(ParseUser.getCurrentUser().getObjectId());
-        uFriend.setFriendID(friend.getObjectId());
-        uFriend.setStatus("P");
-        uFriend.saveInBackground();
-        Toast.makeText(getContext(), "Friend Added", Toast.LENGTH_SHORT).show();
+        UserFriend uUser = new UserFriend();
+
+        String status =  ((Button)v).getText().toString();
+
+        if(status == "Add"){
+
+            uFriend.setUserID(ParseUser.getCurrentUser().getObjectId());
+            uFriend.setFriendID(friend.getObjectId());
+            uFriend.setStatus("Pending");//Complete
+            uFriend.saveInBackground();
+
+            uUser.setUserID(friend.getObjectId());
+            uUser.setFriendID(ParseUser.getCurrentUser().getObjectId());
+            uUser.setStatus("Accept");//Complete
+            uUser.saveInBackground();
+
+            ((Button)v).setText("Pending");
+
+            Toast.makeText(getContext(), "Friend Requent Sent", Toast.LENGTH_SHORT).show();
+        }
+
+
+        if(status != null && status.equalsIgnoreCase("Accept")){
+            ParseQuery<UserFriend> queryUFriend = ParseQuery.getQuery("UserFriend");
+            ParseQuery<UserFriend> queryUFriendReverse = ParseQuery.getQuery("UserFriend");
+
+            ParseQuery<UserFriend> queryUFriendUpdate = ParseQuery.getQuery("UserFriend");
+            ParseQuery<UserFriend> queryUFriendUpdateReverse = ParseQuery.getQuery("UserFriend");
+
+            final String uFriendOID=null;
+            queryUFriend.whereEqualTo("userID", ParseUser.getCurrentUser().getObjectId());
+            queryUFriend.whereEqualTo("friendID", friend.getObjectId());
+
+            queryUFriendReverse.whereEqualTo("friendID", ParseUser.getCurrentUser().getObjectId());
+            queryUFriendReverse.whereEqualTo("userID", friend.getObjectId());
+
+
+            queryUFriend.findInBackground(new FindCallback<UserFriend>() {
+                                              public void done(List<UserFriend> itemList, ParseException e) {
+                                                  if (e == null) {
+                                                      for (UserFriend userF : itemList) {
+
+                                                          queryUFriendUpdate.getInBackground(userF.getObjectId().toString(), new GetCallback<UserFriend>() {
+                                                              public void done(UserFriend uFriend, ParseException e) {
+                                                                  if (e == null) {
+                                                                      uFriend.put("status", "Friend");
+                                                                      uFriend.saveInBackground();
+                                                                  } else {
+                                                                      Log.d("item", "Error: " + e.getMessage());
+                                                                  }
+                                                              }
+                                                          });
+                                                      }
+                                                  }else {
+                                                      Log.d("item", "Error: " + e.getMessage());
+                                                  }
+                                              }
+            });
+
+
+
+            queryUFriendReverse.findInBackground(new FindCallback<UserFriend>() {
+                public void done(List<UserFriend> itemList, ParseException e) {
+                    if (e == null) {
+                        for (UserFriend userF : itemList) {
+
+                            queryUFriendUpdateReverse.getInBackground(userF.getObjectId().toString(), new GetCallback<UserFriend>() {
+                                public void done(UserFriend uFriend, ParseException e) {
+                                    if (e == null) {
+                                        uFriend.put("status", "Friend");
+                                        uFriend.saveInBackground();
+                                    } else {
+                                        Log.d("item", "Error: " + e.getMessage());
+                                    }
+                                }
+                            });
+                        }
+                    }else {
+                        Log.d("item", "Error: " + e.getMessage());
+                    }
+                }
+            });
+
+            ((Button)v).setText("Friends");
+            Toast.makeText(getContext(), "You are now Friends", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 
@@ -142,6 +222,20 @@ public class SearchAddFriendsAdapter extends
                     .fitCenter()
                     .into(viewHolder.binding.ivUserProfileImage);
         }
+
+        if(person.get("status") != null)
+        {
+            viewHolder.binding.btnStatus.setText(person.get("status").toString());
+        }else{
+            viewHolder.binding.btnStatus.setText("Add");
+        }
+        viewHolder.binding.btnStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddFriendToUser(person, viewHolder.binding.btnStatus );
+            }
+        });
+
     }
     // Returns the total count of items in the list
     @Override

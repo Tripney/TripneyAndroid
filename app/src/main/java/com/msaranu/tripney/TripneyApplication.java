@@ -30,9 +30,8 @@ public class TripneyApplication extends Application {
         // Register your parse models
         ParseObject.registerSubclass(Trip.class);
         ParseObject.registerSubclass(Expense.class);
-        ParseObject.registerSubclass(Trip.class);
-        ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Event.class);
+        ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(UserFriend.class);
 
 

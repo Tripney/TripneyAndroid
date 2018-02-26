@@ -94,17 +94,17 @@ public class LoginActivity extends AppCompatActivity {
         ivLoginTripney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //    Intent i = new Intent(LoginActivity.this,SigninActivity.class);
-             //   startActivity(i);
+                Intent i = new Intent(LoginActivity.this,SigninActivity.class);
+                startActivity(i);
 
-                ParseUser.logInInBackground("msu", "msp", (user, e) -> {
+             /*   ParseUser.logInInBackground("msu", "msp", (user, e) -> {
                     if (user != null) {
                         Intent i = new Intent(LoginActivity.this, MainTripActivity.class);
                         startActivity(i);
                     } else {
                         Toast.makeText(LoginActivity.this,"Login Failed " +e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                });
+                });*/
             }
         });
 

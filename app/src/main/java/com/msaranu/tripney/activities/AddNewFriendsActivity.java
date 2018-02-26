@@ -33,8 +33,6 @@ public class AddNewFriendsActivity extends AppCompatActivity {
                 (ContextCompat.getDrawable(AddNewFriendsActivity.this, R.drawable.ic_arrow_back));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 

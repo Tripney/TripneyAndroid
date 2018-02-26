@@ -20,11 +20,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.adapters.TripRecyclerAdapter;
 import com.msaranu.tripney.fragments.AddNewFriendsFragment;
 import com.msaranu.tripney.fragments.AddTripFragment;
 import com.msaranu.tripney.models.Trip;
+import com.msaranu.tripney.models.User;
+import com.msaranu.tripney.services.UserService;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -43,6 +46,8 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
     TextView tvNavUserName;
     ArrayList<Trip> trips;
     TripRecyclerAdapter adapter;
+    private TextView tvNavUserFullName;
+    User user;
 
 
     @Override
@@ -62,7 +67,9 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
 
         View headerView = nvDrawer.inflateHeaderView(R.layout.navigation_drawer_header);
         navHeaderProfileImage = (ImageView) headerView.findViewById(R.id.ivProfileImage);
+        tvNavUserFullName = (TextView) headerView.findViewById(R.id.tvUserFullName);
         tvNavUserName = (TextView) headerView.findViewById(R.id.tvUserName);
+
 
         // Setup drawer view
         setupDrawerContent(nvDrawer);
@@ -154,6 +161,17 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
 
 
     private void setupDrawerContent(NavigationView navigationView) {
+
+        user = UserService.getInstance().retriveUserFromParseUser(ParseUser.getCurrentUser());
+
+        Glide.with(this).load(user.getProfilePicture().toString())
+                .fitCenter()
+                .into(navHeaderProfileImage);
+
+        tvNavUserFullName.setText(user.getFirstName() + " " + user.getLastName());
+        tvNavUserName.setText("@" + ParseUser.getCurrentUser().getUsername());
+
+
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -167,14 +185,20 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
     public void selectDrawerItem(MenuItem menuItem) {
         Intent i;
         switch(menuItem.getItemId()) {
-            case R.id.nav_first_fragment:
+            case R.id.nav_home:
                 i = new Intent(this, MainTripActivity.class);
                 break;
-            case R.id.nav_second_fragment:
+            case R.id.nav_user_profile:
                 i = new Intent(this, UserProfileActivity.class);
                 break;
-            case R.id.nav_third_fragment:
+            case R.id.nav_add_friends:
                 i = new Intent(this, AddNewFriendsActivity.class);
+            case R.id.nav_notifications:
+                i = new Intent(this, MainTripActivity.class);
+            case R.id.nav_help:
+                i = new Intent(this, MainTripActivity.class);
+            case R.id.nav_settings:
+                i = new Intent(this, MainTripActivity.class);
                 break;
             default:
                 i = new Intent(this, MainTripActivity.class);
