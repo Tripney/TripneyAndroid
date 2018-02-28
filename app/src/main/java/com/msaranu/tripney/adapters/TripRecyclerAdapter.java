@@ -13,7 +13,10 @@ import com.msaranu.tripney.activities.DetailTripActivity;
 import com.msaranu.tripney.databinding.ItemTripBinding;
 import com.msaranu.tripney.decorators.ItemClickSupport;
 import com.msaranu.tripney.models.Trip;
+import com.msaranu.tripney.utilities.DateUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -98,13 +101,18 @@ public class TripRecyclerAdapter extends
     // Involves populating data into the item through holder
     @Override
     public void onBindViewHolder(TripRecyclerAdapter.ViewHolder viewHolder, int position) {
+
         // Get the data model based on position
         Trip trip = mTrips.get(position);
+
+        Calendar cal = DateUtils.convertStringtoCalendar(trip.get("mDate").toString());
 
         // Set item views based on your views and data model
 
         viewHolder.binding.tvTripName.setText(trip.get("mName").toString());  // setVariable(BR.user, user) would also work
-        viewHolder.binding.tvTripDate.setText(trip.get("mDate").toString());
+        viewHolder.binding.tvTripMonth.setText((new SimpleDateFormat("MMM").format(cal.getTime())).toUpperCase());
+        viewHolder.binding.tvTripDay.setText(Integer.toString(cal.get(Calendar.DAY_OF_MONTH)));
+
         viewHolder.binding.tvTripDescriptom.setText(trip.get("mDescription").toString());
         viewHolder.binding.tvTripStatus.setText(trip.get("mStatus").toString());
 

@@ -15,7 +15,7 @@
     <dimen name="user_preference_desc_text_size">15sp</dimen>
     <dimen name="event_list_main_card_margin">8dp</dimen>
     <dimen name="event_list_main_rel_padding">12dp</dimen>
-    <dimen name="event_list_main_image_padding">0dp</dimen>
+    <dimen name="list_main_image_padding">8dp</dimen>
     <dimen name="event_list_divider_param">0.5dp</dimen>
     <dimen name="filter_item_spacing">6dp</dimen>
     <dimen name="detail_top_bar_height">200dp</dimen>

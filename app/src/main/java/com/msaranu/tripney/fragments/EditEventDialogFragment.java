@@ -12,14 +12,20 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
+import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.models.Event;
 import com.msaranu.tripney.models.Trip;
+import com.msaranu.tripney.utilities.DateUtils;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditEventDialogFragment extends DialogFragment {
+public class EditEventDialogFragment extends DialogFragment implements CalendarDatePickerDialogFragment.OnDateSetListener,  RadialTimePickerDialogFragment.OnTimeSetListener {
 
     private EditText eventName;
     private EditText eventLocation;
@@ -30,6 +36,7 @@ public class EditEventDialogFragment extends DialogFragment {
     private Button save;
     Event event;
     Trip trip;
+    Calendar cal;
 
     public EditEventDialogFragment() {
         // Required empty public constructor
@@ -59,6 +66,27 @@ public class EditEventDialogFragment extends DialogFragment {
     }
 
 
+    @Override
+    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+        eventDate.setText(monthOfYear+"/"+dayOfMonth+ "/" +year);
+        callTimePicker();
+    }
+
+    private void callTimePicker() {
+        RadialTimePickerDialogFragment rtpd = new RadialTimePickerDialogFragment()
+                .setOnTimeSetListener(EditEventDialogFragment.this)
+                .setStartTime(cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE))
+                .setDoneText("Done")
+                .setCancelText("Cancel");
+        rtpd.show(getFragmentManager(), "Pick Time");
+    }
+
+
+    @Override
+    public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
+        eventDate.setText(eventDate.getText().toString() + " " + hourOfDay + ": " + minute);
+
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -84,9 +112,22 @@ public class EditEventDialogFragment extends DialogFragment {
         eventPrice.setText(event.price.toString());
         eventDate.setText(event.date);
 
+        cal = DateUtils.convertStringtoCalendar(event.date);
 
 
+        eventDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
+                        .setOnDateSetListener(EditEventDialogFragment.this)
+                        .setPreselectedDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+                        .setFirstDayOfWeek(Calendar.SUNDAY)
+                        .setDoneText("Done")
+                        .setCancelText("Cancel");
 
+                cdp.show(getFragmentManager(), "Select Date");
+            }
+        });
         save = (Button) view.findViewById(R.id.btnEventSave);
 
 

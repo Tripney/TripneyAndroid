@@ -14,6 +14,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
+import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.models.User;
@@ -23,11 +25,13 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class AddTripFragment extends DialogFragment implements
-        DatePickerDialog.OnDateSetListener,AddFriendsDialogFragment.AddFriendsFragmentDialogListener {
+public class AddTripFragment extends DialogFragment
+ implements AddFriendsDialogFragment.AddFriendsFragmentDialogListener,
+        CalendarDatePickerDialogFragment.OnDateSetListener,  RadialTimePickerDialogFragment.OnTimeSetListener {
 
 
-    private EditText tripName;
+
+private EditText tripName;
     private EditText tripDate;
     private EditText tripDescripton;
     private EditText tripLocation;
@@ -50,12 +54,25 @@ public class AddTripFragment extends DialogFragment implements
     }
 
     @Override
-    public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-        final Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, monthOfYear);
-        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        tripDate.setText(c.getTime().toString());
+    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+        tripDate.setText(monthOfYear+"/"+dayOfMonth+ "/" +year);
+        callTimePicker();
+    }
+
+    private void callTimePicker() {
+        RadialTimePickerDialogFragment rtpd = new RadialTimePickerDialogFragment()
+                .setOnTimeSetListener(AddTripFragment.this)
+                .setStartTime(10, 10)
+                .setDoneText("Done")
+                .setCancelText("Cancel");
+        rtpd.show(getFragmentManager(), "Pick Time");
+    }
+
+
+    @Override
+    public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
+        tripDate.setText(tripDate.getText().toString() + " " + hourOfDay + ":" + minute);
+
     }
 
     @Override
@@ -109,16 +126,20 @@ public class AddTripFragment extends DialogFragment implements
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
+
         tripDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerFragment newFragment = new DatePickerFragment();
-                FragmentManager fm = getFragmentManager();
-                newFragment.setTargetFragment(AddTripFragment.this, 300);
-                newFragment.show(getFragmentManager(), "datePicker");
+                CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
+                        .setOnDateSetListener(AddTripFragment.this)
+                        .setFirstDayOfWeek(Calendar.SUNDAY)
+                        .setDoneText("Done")
+                        .setCancelText("Cancel");
 
+                cdp.show(getFragmentManager(), "Select Date");
             }
         });
+
 
 
 

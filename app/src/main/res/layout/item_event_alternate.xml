@@ -18,10 +18,10 @@
         android:background="@drawable/card_view_edge"
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="1dp"
-        android:layout_marginTop="@dimen/event_list_main_image_padding"
-        android:layout_marginStart="@dimen/event_list_main_image_padding"
-        android:layout_marginEnd="@dimen/event_list_main_image_padding"
-        android:layout_marginBottom="@dimen/event_list_main_image_padding">
+        android:layout_marginTop="@dimen/list_main_image_padding"
+        android:layout_marginStart="@dimen/list_main_image_padding"
+        android:layout_marginEnd="@dimen/list_main_image_padding"
+        android:layout_marginBottom="@dimen/list_main_image_padding">
 
 
         <RelativeLayout

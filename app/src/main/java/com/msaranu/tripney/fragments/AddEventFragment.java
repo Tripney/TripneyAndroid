@@ -10,12 +10,17 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
+import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
+import com.codetroopers.betterpickers.timepicker.TimePickerDialogFragment;
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.models.Event;
 import com.msaranu.tripney.models.Trip;
 
+import java.util.Calendar;
 
-public class AddEventFragment extends DialogFragment {
+
+public class AddEventFragment extends DialogFragment  implements CalendarDatePickerDialogFragment.OnDateSetListener,  RadialTimePickerDialogFragment.OnTimeSetListener {
 
 
     private EditText eventName;
@@ -47,6 +52,28 @@ public class AddEventFragment extends DialogFragment {
         return frag;
     }
 
+    @Override
+    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+        eventDate.setText(monthOfYear+"/"+dayOfMonth+ "/" +year);
+        callTimePicker();
+    }
+
+    private void callTimePicker() {
+        RadialTimePickerDialogFragment rtpd = new RadialTimePickerDialogFragment()
+                .setOnTimeSetListener(AddEventFragment.this)
+                .setStartTime(10, 10)
+                .setDoneText("Done")
+                .setCancelText("Cancel");
+        rtpd.show(getFragmentManager(), "Pick Time");
+    }
+
+
+    @Override
+    public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
+        eventDate.setText(eventDate.getText().toString() + " " + hourOfDay + ":" + minute );
+
+    }
+
     public interface AddEventFragmentDialogListener {
         void onFinishEditDialog(Event event);
     }
@@ -76,6 +103,19 @@ public class AddEventFragment extends DialogFragment {
         eventPrice = (EditText) view.findViewById(R.id.etEventPrice);
         eventDate = (EditText) view.findViewById(R.id.etEventDate);
 
+
+        eventDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                            CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
+                                .setOnDateSetListener(AddEventFragment.this)
+                                .setFirstDayOfWeek(Calendar.SUNDAY)
+                                    .setDoneText("Done")
+                                .setCancelText("Cancel");
+
+                        cdp.show(getFragmentManager(), "Select Date");
+                    }
+        });
 
         save = (Button) view.findViewById(R.id.btnEventSave);
 

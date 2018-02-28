@@ -74,6 +74,12 @@
     <string name="trip_location">Location</string>
     <string name="trip_add_friends">Add Friends</string>
     <string name="title_activity_add_new_friends">AddNewFriendsActivity</string>
+    <string name="event_date">Date</string>
+    <string name="event_name">Name</string>
+    <string name="event_location">Location</string>
+    <string name="event_duration">Duration</string>
+    <string name="event_type">Type</string>
+    <string name="event_price">Price</string>
 
 </resources>
 

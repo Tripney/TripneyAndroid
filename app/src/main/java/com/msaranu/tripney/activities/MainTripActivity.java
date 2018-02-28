@@ -164,9 +164,11 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
 
         user = UserService.getInstance().retriveUserFromParseUser(ParseUser.getCurrentUser());
 
-        Glide.with(this).load(user.getProfilePicture().toString())
-                .fitCenter()
-                .into(navHeaderProfileImage);
+        if(user.getProfilePicture()!=null) {
+            Glide.with(this).load(user.getProfilePicture().toString())
+                    .fitCenter()
+                    .into(navHeaderProfileImage);
+        }
 
         tvNavUserFullName.setText(user.getFirstName() + " " + user.getLastName());
         tvNavUserName.setText("@" + ParseUser.getCurrentUser().getUsername());
@@ -193,10 +195,13 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
                 break;
             case R.id.nav_add_friends:
                 i = new Intent(this, AddNewFriendsActivity.class);
+                break;
             case R.id.nav_notifications:
                 i = new Intent(this, MainTripActivity.class);
+                break;
             case R.id.nav_help:
                 i = new Intent(this, MainTripActivity.class);
+                break;
             case R.id.nav_settings:
                 i = new Intent(this, MainTripActivity.class);
                 break;

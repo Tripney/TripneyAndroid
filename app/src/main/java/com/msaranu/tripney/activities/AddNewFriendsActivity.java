@@ -1,5 +1,6 @@
 package com.msaranu.tripney.activities;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -31,6 +32,7 @@ public class AddNewFriendsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator
                 (ContextCompat.getDrawable(AddNewFriendsActivity.this, R.drawable.ic_arrow_back));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorTripney)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -43,6 +45,18 @@ public class AddNewFriendsActivity extends AppCompatActivity {
 
     }
 
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

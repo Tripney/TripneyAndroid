@@ -156,7 +156,7 @@
                 <View
                     android:id="@+id/spView01"
                     android:layout_width="match_parent"
-                    android:layout_height="8dp"
+                    android:layout_height="3dp"
                     android:layout_below="@id/tvEventDescription"
                     android:layout_marginBottom="15dp"
                     android:layout_marginEnd="-10dp"
@@ -202,21 +202,14 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/ivClockIcon"
                     android:layout_below="@id/spView01"
-                    android:layout_toStartOf="@+id/ivRedirect"
                     android:layout_marginEnd="15dp"
                     android:clickable="true"
                     android:text="Add to Calendar"
+                    android:layout_alignParentEnd="true"
                     android:textColor="@color/twitterBlue"
                     android:textSize="13sp" />
 
-                <ImageButton
-                    android:id="@+id/ivRedirect"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@color/colorWhite"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/spView01"
-                    app:srcCompat="@drawable/ic_link" />
+
 
                 <ImageView
                     android:id="@+id/ivLocationIcon"
@@ -229,86 +222,54 @@
                     app:srcCompat="@drawable/ic_location_pin" />
 
                 <TextView
-                    android:id="@+id/tvEventDuration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/ivLocationIcon"
-                    android:layout_below="@id/ivLocationIcon"
-                    android:layout_marginBottom="5dp"
-                    android:layout_toRightOf="@id/ivLocationIcon"
-                    android:text=''
-                    android:textColor="@color/black"
-                    android:textSize="13sp" />
-
-
-                <View
-                    android:id="@+id/spView03"
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    android:layout_below="@id/tvEventDuration"
-                    android:layout_marginEnd="-10dp"
-                    android:layout_marginStart="-10dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@color/veryLightGrey" />
-
-                <TextView
                     android:id="@+id/tvEventLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/ivLocationIcon"
                     android:layout_below="@id/ivClockIcon"
                     android:layout_marginBottom="5dp"
-                    android:layout_toRightOf="@id/ivLocationIcon"
+                    android:layout_toEndOf="@id/ivLocationIcon"
                     android:text=''
-                    android:textColor="@color/black"
+                    android:textColor="@color/grey"
                     android:textSize="13sp" />
 
-                <View
-                    android:id="@+id/spView05"
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    android:layout_below="@id/tvEventDuration"
-                    android:layout_marginEnd="-10dp"
-                    android:layout_marginStart="-10dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@color/veryLightGrey" />
+                <TextView
+                    android:id="@+id/tvEventDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ivLocationIcon"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toEndOf="@id/ivLocationIcon"
+                    android:text=''
+                    android:textColor="@color/grey"
+                    android:textSize="13sp" />
+
 
                 <TextView
                     android:id="@+id/tvEventType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/ivLocationIcon"
-                    android:layout_below="@id/tvEventLocation"
+                    android:layout_below="@id/tvEventDuration"
                     android:layout_marginBottom="5dp"
                     android:text=''
-                    android:textColor="@color/black"
+                    android:textColor="@color/grey"
                     android:textSize="13sp" />
 
-                <View
-                    android:id="@+id/spView06"
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    android:layout_below="@id/tvEventType"
-                    android:layout_marginEnd="-10dp"
-                    android:layout_marginStart="-10dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@color/veryLightGrey" />
 
                 <TextView
                     android:id="@+id/tvEventPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/ivLocationIcon"
                     android:layout_below="@id/tvEventType"
                     android:layout_marginBottom="5dp"
                     android:text=''
-                    android:textColor="@color/black"
+                    android:textColor="@color/grey"
                     android:textSize="13sp" />
 
                 <View
                     android:id="@+id/spView02"
                     android:layout_width="match_parent"
-                    android:layout_height="8dp"
+                    android:layout_height="3dp"
                     android:layout_below="@id/tvEventPrice"
                     android:layout_marginEnd="-10dp"
                     android:layout_marginStart="-10dp"
@@ -327,7 +288,7 @@
                 <View
                     android:id="@+id/spView04"
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="3dp"
                     android:layout_below="@id/mapEBView"
                     android:layout_marginEnd="-10dp"
                     android:layout_marginStart="-10dp"

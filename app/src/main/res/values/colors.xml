@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorTripney">#FF5722</color>
-    <color name="colorPrimary">#FF5722</color>
+    <color name="colorTripney">#320b86</color>
+    <color name="colorPrimary">#320b86</color>
     <color name="colorPrimaryDark">#E64A19</color>
     <color name="colorAccent">#EF5350</color>
     <color name="colorWhite">#FFFFFF</color>
@@ -14,6 +14,8 @@
     <color name="colorGreen">#228b22</color>
     <color name="colorTransparent">#00555555</color>
     <color name="placeholder_bg">#363A3E</color>
+    <color name="darkestGrey">#3d3d5c</color>
+    <color name="offWhite">#fcfcfc</color>
 
 
     <color name="BgGradientStartColor">#FF5722</color>

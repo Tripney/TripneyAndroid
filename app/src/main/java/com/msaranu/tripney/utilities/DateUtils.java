@@ -3,6 +3,7 @@ package com.msaranu.tripney.utilities;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -124,4 +125,34 @@ public class DateUtils {
             return null;
         }
     }
+
+
+    public static Date convertStringtoDate(String strDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy hh:mm");
+
+        Date date = null;
+        try {
+            date = sdf.parse(strDate);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Calendar convertStringtoCalendar(String strDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+
+        Date date = null;
+        try {
+            date = sdf.parse(strDate);
+            Calendar c= Calendar.getInstance();
+            c.setTime(date);
+            return c;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
