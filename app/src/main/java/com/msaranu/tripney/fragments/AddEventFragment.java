@@ -16,8 +16,10 @@ import com.codetroopers.betterpickers.timepicker.TimePickerDialogFragment;
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.models.Event;
 import com.msaranu.tripney.models.Trip;
+import com.msaranu.tripney.utilities.DateUtils;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 
 public class AddEventFragment extends DialogFragment  implements CalendarDatePickerDialogFragment.OnDateSetListener,  RadialTimePickerDialogFragment.OnTimeSetListener {
@@ -52,15 +54,17 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
         return frag;
     }
 
+
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-        eventDate.setText(monthOfYear+"/"+dayOfMonth+ "/" +year);
+        eventDate.setText(monthOfYear+1 +"/"+dayOfMonth+ "/" +year);
         callTimePicker();
     }
 
     private void callTimePicker() {
         RadialTimePickerDialogFragment rtpd = new RadialTimePickerDialogFragment()
                 .setOnTimeSetListener(AddEventFragment.this)
+                .setTitleText(TimeZone.getDefault().getDisplayName())
                 .setStartTime(10, 10)
                 .setDoneText("Done")
                 .setCancelText("Cancel");
@@ -71,8 +75,8 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
     @Override
     public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
         eventDate.setText(eventDate.getText().toString() + " " + hourOfDay + ":" + minute );
-
     }
+
 
     public interface AddEventFragmentDialogListener {
         void onFinishEditDialog(Event event);
@@ -133,7 +137,7 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
                 event.setLocation(eventLocation.getText().toString());
                 event.setDuration(eventDuration.getText().toString());
                 event.setType(eventType.getText().toString());
-                event.setDate(eventDate.getText().toString());
+                event.setDate(Long.toString(DateUtils.shiftTimeZone(eventDate.getText().toString()).getTime()));
                 event.setPrice(Double.parseDouble(eventPrice.getText().toString()));
                 event.setTripID(trip._id);
                 if(isWishList) event.setIsWish("Y");

@@ -80,6 +80,7 @@
     <string name="event_duration">Duration</string>
     <string name="event_type">Type</string>
     <string name="event_price">Price</string>
+    <string name="timezone_prompt">TimeZone</string>
 
 </resources>
 

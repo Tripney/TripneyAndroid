@@ -117,14 +117,15 @@
                     android:textStyle="bold" />
 
 
+
                 <ImageButton
-                    android:id="@+id/ivFavoriteIcon"
+                    android:id="@+id/ivEditIcon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/colorWhite"
                     android:layout_weight="0.5"
-                    app:srcCompat="@drawable/ic_favorite_grey" />
+                    app:srcCompat="@drawable/ic_edit" />
 
             </LinearLayout>
 

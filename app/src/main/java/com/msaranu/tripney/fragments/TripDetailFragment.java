@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.databinding.FragmentDetailTripBinding;
 import com.msaranu.tripney.models.Trip;
+import com.msaranu.tripney.utilities.DateUtils;
 import com.parse.ParseUser;
+
+import java.util.Calendar;
 
 import butterknife.ButterKnife;
 
@@ -40,7 +44,7 @@ import butterknife.ButterKnife;
 public class TripDetailFragment extends android.support.v4.app.Fragment {
 
     MapView mMapView;
-    ImageButton ibFavorite;
+    ImageButton ivEditIcon;
     private GoogleMap googleMap;
 
 
@@ -78,12 +82,13 @@ public class TripDetailFragment extends android.support.v4.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        Calendar cal = DateUtils.convertUTCtoLocalTime(trip.mDate);
 
             // Inflate the layout for this fragment
         fragmentBinding =  DataBindingUtil.inflate(inflater,R.layout.fragment_detail_trip, parent, false);
             View view = fragmentBinding.getRoot();
             ButterKnife.bind(this, view);
-        fragmentBinding.tvTripDate.setText(trip.mDate);
+        fragmentBinding.tvTripDate.setText(cal.getTime().toString());
         fragmentBinding.tvTripDescription.setText(trip.mDescription);
         fragmentBinding.tvTripName.setText(trip.mName);
         fragmentBinding.tvTripStatus.setText(trip.mStatus);
@@ -95,26 +100,23 @@ public class TripDetailFragment extends android.support.v4.app.Fragment {
         //SetUp Listeners
         setSourceSiteLinkIntentListener();
         setAddToCalendarListener();
-        setFavoriteIconListener();
+        setEditIconListener();
      //   setRedirectIconListener();
       initializeMap(view,savedInstanceState);
 
         return view;
     }
 
+    private void setEditIconListener() {
 
-
-
-    private void setFavoriteIconListener() {
-
-        ibFavorite = fragmentBinding.ivFavoriteIcon;
-
-
-        ibFavorite.setOnClickListener(view -> {
-
+        ivEditIcon = fragmentBinding.ivEditIcon;
+        ivEditIcon.setOnClickListener(view -> {
+            FragmentManager fm = getFragmentManager();
+            EditTripDetailDialogFragment editTripDetailDialogFragment =EditTripDetailDialogFragment.newInstance(trip);
+            editTripDetailDialogFragment.setTargetFragment(TripDetailFragment.this, 300);
+            editTripDetailDialogFragment.show(fm, "fragment_edit_event");
         });
     }
-
     private void setAddToCalendarListener() {
         fragmentBinding.tvCalendar.setOnClickListener(v -> addToCalendar());
         fragmentBinding.ivCalendar.setOnClickListener(v -> addToCalendar());

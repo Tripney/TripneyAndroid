@@ -38,7 +38,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.databinding.FragmentEventDetailBinding;
 import com.msaranu.tripney.models.Event;
+import com.msaranu.tripney.utilities.DateUtils;
 import com.parse.ParseUser;
+
+import java.util.Calendar;
 
 import butterknife.ButterKnife;
 
@@ -92,12 +95,14 @@ public class EventDetailFragment extends android.support.v4.app.Fragment impleme
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        Calendar cal = DateUtils.convertUTCtoLocalTime(event.date);
 
         // Inflate the layout for this fragment
         fragmentBinding =  DataBindingUtil.inflate(inflater,R.layout.fragment_event_detail, parent, false);
         View view = fragmentBinding.getRoot();
         ButterKnife.bind(this, view);
-        fragmentBinding.tvEventDate.setText(event.date);
+        fragmentBinding.tvEventDate.setText(cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH)
+                +" " +cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
         fragmentBinding.tvEventName.setText(event.name);
         fragmentBinding.tvEventLocation.setText(event.location);
         fragmentBinding.tvEventDuration.setText(event.duration);

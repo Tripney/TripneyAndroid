@@ -105,7 +105,7 @@ public class TripRecyclerAdapter extends
         // Get the data model based on position
         Trip trip = mTrips.get(position);
 
-        Calendar cal = DateUtils.convertStringtoCalendar(trip.get("mDate").toString());
+        Calendar cal = DateUtils.convertUTCtoLocalTime(trip.get("mDate").toString());
 
         // Set item views based on your views and data model
 

@@ -51,12 +51,12 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvEventDuration"
+                android:id="@+id/tvEventDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvEventLocation"
                 android:layout_alignStart="@id/tvEventLocation"
-                android:text="Duration"
+                android:text="Date"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold" />
 

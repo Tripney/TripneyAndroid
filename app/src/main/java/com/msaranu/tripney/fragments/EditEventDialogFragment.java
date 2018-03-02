@@ -21,6 +21,7 @@ import com.msaranu.tripney.utilities.DateUtils;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,8 +42,6 @@ public class EditEventDialogFragment extends DialogFragment implements CalendarD
     public EditEventDialogFragment() {
         // Required empty public constructor
     }
-
-
 
     public static EditEventDialogFragment newInstance(Event event) {
         EditEventDialogFragment frag = new EditEventDialogFragment();
@@ -65,16 +64,16 @@ public class EditEventDialogFragment extends DialogFragment implements CalendarD
         return inflater.inflate(R.layout.fragment_edit_event_dialog, container, false);
     }
 
-
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-        eventDate.setText(monthOfYear+"/"+dayOfMonth+ "/" +year);
+        eventDate.setText(monthOfYear+1 +"/"+dayOfMonth+ "/" +year);
         callTimePicker();
     }
 
     private void callTimePicker() {
         RadialTimePickerDialogFragment rtpd = new RadialTimePickerDialogFragment()
                 .setOnTimeSetListener(EditEventDialogFragment.this)
+                .setTitleText(TimeZone.getDefault().getDisplayName())
                 .setStartTime(cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE))
                 .setDoneText("Done")
                 .setCancelText("Cancel");
@@ -84,9 +83,9 @@ public class EditEventDialogFragment extends DialogFragment implements CalendarD
 
     @Override
     public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
-        eventDate.setText(eventDate.getText().toString() + " " + hourOfDay + ": " + minute);
-
+        eventDate.setText(eventDate.getText().toString() + " " + hourOfDay + ":" + minute );
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -95,6 +94,9 @@ public class EditEventDialogFragment extends DialogFragment implements CalendarD
 
         // Fetch arguments from bundle and set
         event = getArguments().getParcelable("event");
+
+        cal = DateUtils.convertUTCtoLocalTime(event.date);
+
 
         //TODO: Remove boiler plate code. Swith to databinding/butterknife
         // Get field from view
@@ -110,9 +112,8 @@ public class EditEventDialogFragment extends DialogFragment implements CalendarD
         eventDuration.setText(event.duration);
         eventType.setText(event.type);
         eventPrice.setText(event.price.toString());
-        eventDate.setText(event.date);
-
-        cal = DateUtils.convertStringtoCalendar(event.date);
+        eventDate.setText(cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH)
+                +" " +cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
 
 
         eventDate.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +129,8 @@ public class EditEventDialogFragment extends DialogFragment implements CalendarD
                 cdp.show(getFragmentManager(), "Select Date");
             }
         });
+
+
         save = (Button) view.findViewById(R.id.btnEventSave);
 
 
@@ -144,7 +147,7 @@ public class EditEventDialogFragment extends DialogFragment implements CalendarD
                 event.setLocation(eventLocation.getText().toString());
                 event.setDuration(eventDuration.getText().toString());
                 event.setType(eventType.getText().toString());
-                event.setDate(eventDate.getText().toString());
+                event.setDate(Long.toString(DateUtils.shiftTimeZone(eventDate.getText().toString()).getTime()));
                 event.setPrice(Double.parseDouble(eventPrice.getText().toString()));
                 event.setObjectId(event.eventID);
 

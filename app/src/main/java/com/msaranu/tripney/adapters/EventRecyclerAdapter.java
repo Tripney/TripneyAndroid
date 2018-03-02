@@ -18,7 +18,9 @@ import com.msaranu.tripney.fragments.EditEventDialogFragment;
 import com.msaranu.tripney.fragments.EventDetailFragment;
 import com.msaranu.tripney.fragments.TripThingsToDoFragment;
 import com.msaranu.tripney.models.Event;
+import com.msaranu.tripney.utilities.DateUtils;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -169,9 +171,12 @@ public class EventRecyclerAdapter extends
 
     private void configureViewHolderAlternate(ViewHolderAlternate viewHolder, Event event) {
 
+        Calendar cal = DateUtils.convertUTCtoLocalTime(event.get("date").toString());
+
         viewHolder.binding.tvEventName.setText(event.get("name").toString());  // setVariable(BR.user, user) would also work
         viewHolder.binding.tvEventLocation.setText(event.get("location").toString());
-        viewHolder.binding.tvEventDuration.setText(event.get("duration").toString());
+        viewHolder.binding.tvEventDate.setText(cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH)
+                +" " +cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
         viewHolder.binding.tvEventType.setText(event.get("type").toString());
         viewHolder.binding.tvEventPrice.setText(event.get("price").toString());
 
@@ -181,10 +186,12 @@ public class EventRecyclerAdapter extends
     }
 
     private void configureViewHolder(ViewHolder viewHolder, Event event) {
+        Calendar cal = DateUtils.convertUTCtoLocalTime(event.get("date").toString());
 
         viewHolder.binding.tvEventName.setText(event.get("name").toString());  // setVariable(BR.user, user) would also work
         viewHolder.binding.tvEventLocation.setText(event.get("location").toString());
-        viewHolder.binding.tvEventDuration.setText(event.get("duration").toString());
+        viewHolder.binding.tvEventDate.setText(cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH)
+                +" " +cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
         viewHolder.binding.tvEventType.setText(event.get("type").toString());
         viewHolder.binding.tvEventPrice.setText(event.get("price").toString());
 

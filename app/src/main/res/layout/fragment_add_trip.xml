@@ -133,6 +133,7 @@
                     android:text='@{trip.mDate}'
                     android:textSize="16sp" />
 
+
                 <TextView
                     android:id="@+id/tvTripDescription"
                     android:layout_width="wrap_content"
