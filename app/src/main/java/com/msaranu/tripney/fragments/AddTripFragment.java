@@ -93,8 +93,8 @@ private EditText tripName;
     }
 
     @Override
-    public void onFinishAddFriendsDialog(List<User> users) {
-
+    public void onFinishAddFriendsDialog() {
+        //TODO Add horizontal scroll view here
     }
 
 

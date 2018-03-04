@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="user" type="com.msaranu.tripney.models.User"/>
+    </data>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/ivUserProfileImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            app:riv_border_color="@color/colorWhite"
+            app:riv_border_width="2dp"
+            app:riv_corner_radius="100dp"
+            app:riv_mutate_background="true"
+            android:src="@drawable/default_user_image"/>
+
+
+        <TextView
+            android:id="@+id/tvFirstName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/ivUserProfileImage"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:text="FirstName"
+            android:textSize="20sp" />
+
+
+        <TextView
+            android:id="@+id/tvLastName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivTripBckgrndImage"
+            android:layout_toEndOf="@id/tvFirstName"
+            android:text="LastName"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvUserId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvFirstName"
+            android:layout_alignStart="@id/tvFirstName"
+            android:text="UserId"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            />
+
+        <CheckBox
+            android:id="@+id/ckAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tvLastName"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="end"
+            android:layout_marginEnd="9dp"
+            android:textAllCaps="false"
+            android:text="Status"
+         />
+
+
+    </RelativeLayout>
+</layout>

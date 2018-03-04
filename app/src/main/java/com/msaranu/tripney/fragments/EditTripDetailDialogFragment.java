@@ -99,7 +99,7 @@ public class EditTripDetailDialogFragment extends DialogFragment implements AddF
     }
 
     @Override
-    public void onFinishAddFriendsDialog(List<User> users) {
+    public void onFinishAddFriendsDialog() {
 
     }
 
