@@ -81,6 +81,10 @@
     <string name="event_type">Type</string>
     <string name="event_price">Price</string>
     <string name="timezone_prompt">TimeZone</string>
+    <string name="paidBy">Paid By</string>
+    <string name="equal">=</string>
+    <string name="amount">1.15</string>
+    <string name="percentage">%</string>
 
 </resources>
 

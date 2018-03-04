@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.method.LinkMovementMethod;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -108,6 +109,19 @@ public class EventDetailFragment extends android.support.v4.app.Fragment impleme
         fragmentBinding.tvEventDuration.setText(event.duration);
         fragmentBinding.tvEventType.setText(event.type);
         fragmentBinding.tvEventPrice.setText(Double.toString(event.price));
+
+        //fragmentBinding.tvSplitLink.setText(event.type);
+        fragmentBinding.tvSplitLink.setMovementMethod(LinkMovementMethod.getInstance());
+        fragmentBinding.tvSplitLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getFragmentManager();
+                SplitExpensesDialogFragment splitExpensesDialogFragment = SplitExpensesDialogFragment.
+                        newInstance(event.eventID, event.price);
+                splitExpensesDialogFragment.setTargetFragment(EventDetailFragment.this, 300);
+                splitExpensesDialogFragment.show(fm, "fragment_split");
+            }
+        });
 
 
         Glide.with(this).load(R.drawable.eventimage)
