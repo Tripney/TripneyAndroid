@@ -105,7 +105,7 @@ public class SplitRecyclerAdapter extends
 
         ParseQuery<User> query = ParseQuery.getQuery(User.class);
         String userID = splitPos.get("userID").toString();
-        query.whereEqualTo("userID", userID);
+        query.whereEqualTo("objectId", userID);
 
         // Execute the find asynchronously
         query.findInBackground(new FindCallback<User>() {

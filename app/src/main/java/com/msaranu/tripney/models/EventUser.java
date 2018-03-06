@@ -13,7 +13,7 @@ import com.parse.ParseObject;
 public class EventUser extends ParseObject implements Parcelable {
 
     String userID;
-    String EventID;
+    String eventID;
     String status;
 
     public EventUser(){
@@ -22,7 +22,7 @@ public class EventUser extends ParseObject implements Parcelable {
 
     public EventUser(Parcel in) {
         userID = in.readString();
-        EventID = in.readString();
+        eventID = in.readString();
         status = in.readString();
     }
 
@@ -30,13 +30,13 @@ public class EventUser extends ParseObject implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         loadInstanceVariables();
         dest.writeString(userID);
-        dest.writeString(EventID);
+        dest.writeString(eventID);
         dest.writeString(status);
     }
 
     public void loadInstanceVariables() {
         userID = getString("userID");
-        EventID = getString("EventID");
+        eventID = getString("eventID");
         status = getString("status");
     }
 
@@ -65,12 +65,12 @@ public class EventUser extends ParseObject implements Parcelable {
         this.put("userID",userID);
     }
 
-    public String getFriendID() {
-        return getString("EventID");    }
+    public String getEventID() {
+        return getString("eventID");    }
 
-    public void setFriendID(String EventID) {
-        this.EventID = EventID;
-        this.put("EventID",EventID);
+    public void setEventID(String eventID) {
+        this.eventID = eventID;
+        this.put("eventID",eventID);
 
     }
 

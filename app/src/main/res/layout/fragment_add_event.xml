@@ -35,7 +35,7 @@
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
 
                 <ImageView
-                    android:id="@+id/ivTripBckgrndImage"
+                    android:id="@+id/ivEventBckgrndImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
@@ -238,12 +238,80 @@
                     android:textSize="16sp" />
 
 
-                <Button
-                    android:id="@+id/btnEventSave"
+                <TextView
+                    android:id="@+id/tvEventInviteFriends"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/etEventPrice"
-                    android:text="SAVE" />
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/event_add_friends"
+                    android:textColor="@color/hintColor"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:id="@+id/llFriendsHorizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/tvEventInviteFriends"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="14dp"
+                    android:orientation="horizontal">
+
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/ibAddFriends"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvEventInviteFriends"
+                    android:layout_toEndOf="@+id/llFriendsHorizontal"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    app:srcCompat="@drawable/ic_edit" />
+
+                <LinearLayout
+                    android:id="@+id/llButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/ibAddFriends"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="2dp">
+
+                    <Button
+                        android:id="@+id/btnEventCancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:layout_weight="50"
+                        android:background="@color/colorGrey"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:text="@string/profile_cancel"
+                        android:textColor="@color/colorWhite" />
+
+                    <View
+                        android:id="@+id/vDivider"
+                        android:layout_width="2dp"
+                        android:layout_height="60dp" />
+
+                    <Button
+                        android:id="@+id/btnEventSave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:layout_weight="50"
+                        android:background="@color/colorTripney"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:text="@string/profile_save"
+                        android:textColor="@color/colorWhite" />
+
+                </LinearLayout>
 
 
             </RelativeLayout>
@@ -251,4 +319,6 @@
         </android.support.v4.widget.NestedScrollView>
 
     </android.support.design.widget.CoordinatorLayout>
+
+    
 </layout>

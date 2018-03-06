@@ -85,6 +85,7 @@
     <string name="equal">=</string>
     <string name="amount">1.15</string>
     <string name="percentage">%</string>
+    <string name="event_add_friends">Add Friends</string>
 
 </resources>
 

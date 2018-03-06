@@ -3,26 +3,42 @@ package com.msaranu.tripney.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 import com.codetroopers.betterpickers.timepicker.TimePickerDialogFragment;
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.models.Event;
+import com.msaranu.tripney.models.EventUser;
 import com.msaranu.tripney.models.Trip;
+import com.msaranu.tripney.models.EventUser;
 import com.msaranu.tripney.utilities.DateUtils;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 
-public class AddEventFragment extends DialogFragment  implements CalendarDatePickerDialogFragment.OnDateSetListener,  RadialTimePickerDialogFragment.OnTimeSetListener {
+public class AddEventFragment extends DialogFragment  implements CalendarDatePickerDialogFragment.OnDateSetListener, 
+        RadialTimePickerDialogFragment.OnTimeSetListener, AddFriendsToEventDialogFragment.AddFriendsFragmentDialogListener {
 
 
     private EditText eventName;
@@ -31,12 +47,16 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
     private EditText eventType;
     private EditText eventPrice;
     private EditText eventDate;
+    ImageButton eventAddFriends;
+    LinearLayout llFriendsListHorizontal ;
+
 
     private Button save;
     Event event;
     Trip trip;
     Boolean isWishList=false;
     public static final String WISH_LIST = "wish";
+    private List<EventUser> eventUserList;
 
 
     public AddEventFragment() {
@@ -77,6 +97,65 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
         eventDate.setText(eventDate.getText().toString() + " " + hourOfDay + ":" + minute );
     }
 
+    @Override
+    public void onFinishAddFriendsDialog(List<EventUser> eventUserList) {
+
+        //TODO Add horizontal scroll view here
+        this.eventUserList = eventUserList;
+        addFriendsLayout();
+
+    }
+
+    private void addFriendsLayout() {
+
+        for(EventUser eventUser: eventUserList ){
+
+            ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.whereEqualTo("objectId", eventUser.getUserID());
+
+            query.findInBackground(new FindCallback<ParseUser>() {
+                public void done(List<ParseUser> itemList, ParseException e) {
+                    if (e == null) {
+                        for(ParseUser userF : itemList){
+
+
+                            LayoutInflater inflater = LayoutInflater.from(getContext());
+                            View llFriendsInnerList= inflater.inflate(R.layout.layout_friends, null, false);
+
+                            ImageView userImage = (ImageView) llFriendsInnerList.findViewById(R.id.ivUserProfileImage);
+                            TextView userName = (TextView) llFriendsInnerList.findViewById(R.id.tvName);
+
+                            userName.setText(userF.get("firstName").toString() + "\n" + userF.get("lastName").toString());
+
+                            String profileURL;
+                            if(userF.get("profilePicture")!=null) {
+                                Glide.with(getContext()).load(userF.get("profilePicture").toString())
+                                        .fitCenter()
+                                        .into(userImage);
+
+                            }else{
+                                Glide.with(getContext()).load(R.drawable.ic_person)
+                                        .fitCenter()
+                                        .into(userImage);
+                            }
+
+                            llFriendsListHorizontal.addView(llFriendsInnerList);
+
+
+                        }
+                    }
+                    else {
+                        Log.d("item", "Error: " + e.getMessage());
+                    }
+                }
+
+            });
+
+        }
+
+    }
+
+
 
     public interface AddEventFragmentDialogListener {
         void onFinishEditDialog(Event event);
@@ -106,6 +185,10 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
         eventType = (EditText) view.findViewById(R.id.etEventType);
         eventPrice = (EditText) view.findViewById(R.id.etEventPrice);
         eventDate = (EditText) view.findViewById(R.id.etEventDate);
+         eventAddFriends = (ImageButton) view.findViewById(R.id.ibAddFriends);
+        llFriendsListHorizontal = (LinearLayout) view.findViewById(R.id.llFriendsHorizontal);
+        save = (Button) view.findViewById(R.id.btnEventSave);
+
 
 
         eventDate.setOnClickListener(new View.OnClickListener() {
@@ -121,9 +204,16 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
                     }
         });
 
-        save = (Button) view.findViewById(R.id.btnEventSave);
 
-
+        eventAddFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                AddFriendsToEventDialogFragment addFriendsToEventDialogFragment = AddFriendsToEventDialogFragment.newInstance();
+                addFriendsToEventDialogFragment.setTargetFragment(AddEventFragment.this, 300);
+                addFriendsToEventDialogFragment.show(fm, "fragment_add_users");
+            }
+        });
         getDialog().setTitle("Title");
         // Show soft keyboard automatically and request focus to field
         eventName.requestFocus();
@@ -143,8 +233,16 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
                 if(isWishList) event.setIsWish("Y");
                 else event.setIsWish("");
 
-                event.saveInBackground();
-                AddEventFragmentDialogListener addEventFragmentDialogListener =
+                event.saveInBackground(new SaveCallback() {
+                                          @Override
+                                          public void done(ParseException e) {
+                                              for (EventUser pU: eventUserList) {
+                                                  pU.setEventID(event.getObjectId());
+                                                  pU.saveInBackground();
+                                              }
+                                          }
+                                      }
+                );                AddEventFragmentDialogListener addEventFragmentDialogListener =
                         (AddEventFragmentDialogListener) getTargetFragment();
                 addEventFragmentDialogListener.onFinishEditDialog(event);
                 dismiss();

@@ -117,8 +117,10 @@ public class SplitEqualFragment extends android.support.v4.app.Fragment  {
                     Toast.makeText(getContext(), "Message", Toast.LENGTH_SHORT).show();
                     if(splits == null) {
                         //TODO Add New splits
-                        adapter.notifyDataSetChanged();
+                        Split split = new Split();
                     }
+                    adapter.notifyDataSetChanged();
+
                 } else {
                     Log.d("item", "Error: " + e.getMessage());
                 }
