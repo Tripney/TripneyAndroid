@@ -5,6 +5,7 @@ import android.app.Application;
 import com.msaranu.tripney.models.Event;
 import com.msaranu.tripney.models.EventUser;
 import com.msaranu.tripney.models.Expense;
+import com.msaranu.tripney.models.Split;
 import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.models.TripUser;
 import com.msaranu.tripney.models.User;
@@ -37,6 +38,8 @@ public class TripneyApplication extends Application {
         ParseObject.registerSubclass(UserFriend.class);
         ParseObject.registerSubclass(TripUser.class);
         ParseObject.registerSubclass(EventUser.class);
+        ParseObject.registerSubclass(Split.class);
+
 
 
 

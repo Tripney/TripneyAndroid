@@ -20,6 +20,7 @@ import com.msaranu.tripney.adapters.SplitRecyclerAdapter;
 import com.msaranu.tripney.databinding.FragmentSplitEqualBinding;
 import com.msaranu.tripney.databinding.FragmentTripThingsToDoBinding;
 import com.msaranu.tripney.models.Event;
+import com.msaranu.tripney.models.EventUser;
 import com.msaranu.tripney.models.Split;
 import com.msaranu.tripney.models.Trip;
 import com.parse.FindCallback;
@@ -106,6 +107,10 @@ public class SplitEqualFragment extends android.support.v4.app.Fragment  {
         ParseQuery<Split> query = ParseQuery.getQuery(Split.class);
         query.whereEqualTo("eventID", eventID);
 
+        ParseQuery<EventUser> eventQuery = ParseQuery.getQuery(EventUser.class);
+        eventQuery.whereEqualTo("eventID", eventID);
+
+
 
         // Execute the find asynchronously
         query.findInBackground(new FindCallback<Split>() {
@@ -115,9 +120,30 @@ public class SplitEqualFragment extends android.support.v4.app.Fragment  {
                         splits.add(split);
                     }
                     Toast.makeText(getContext(), "Message", Toast.LENGTH_SHORT).show();
-                    if(splits == null) {
+                    if(splits.size() == 0) {
                         //TODO Add New splits
-                        Split split = new Split();
+
+                        eventQuery.findInBackground(new FindCallback<EventUser>() {
+                            public void done(List<EventUser> itemList, ParseException e) {
+                                if (e == null) {
+                                    for(EventUser eventUser : itemList){
+                                        Split split = new Split();
+                                        split.setEventID(eventID);
+                                        split.setUserID(eventUser.get("userID").toString());
+                                        splits.add(split);
+                                    }
+                                    adapter.notifyDataSetChanged();
+
+                                    Toast.makeText(getContext(), "Message", Toast.LENGTH_SHORT).show();
+
+                                } else {
+                                    Log.d("item", "Error: " + e.getMessage());
+                                }
+                            }
+                        });
+
+
+
                     }
                     adapter.notifyDataSetChanged();
 

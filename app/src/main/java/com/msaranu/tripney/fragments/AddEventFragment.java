@@ -209,7 +209,7 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
-                AddFriendsToEventDialogFragment addFriendsToEventDialogFragment = AddFriendsToEventDialogFragment.newInstance();
+                AddFriendsToEventDialogFragment addFriendsToEventDialogFragment = AddFriendsToEventDialogFragment.newInstance(trip._id);
                 addFriendsToEventDialogFragment.setTargetFragment(AddEventFragment.this, 300);
                 addFriendsToEventDialogFragment.show(fm, "fragment_add_users");
             }

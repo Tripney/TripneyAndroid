@@ -22,6 +22,7 @@ import com.msaranu.tripney.utilities.DateUtils;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -103,16 +104,16 @@ public class SplitRecyclerAdapter extends
         // Get the data model based on position
         Split splitPos = mSplits.get(position);
 
-        ParseQuery<User> query = ParseQuery.getQuery(User.class);
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
         String userID = splitPos.get("userID").toString();
         query.whereEqualTo("objectId", userID);
 
         // Execute the find asynchronously
-        query.findInBackground(new FindCallback<User>() {
-            public void done(List<User> itemList, ParseException e) {
+        query.findInBackground(new FindCallback<ParseUser>() {
+            public void done(List<ParseUser> itemList, ParseException e) {
                 if (e == null) {
-                    for(User user : itemList){
-                        viewHolder.binding.tvName.setText( user.getFirstName() + " " + user.getLastName());
+                    for(ParseUser user : itemList){
+                        viewHolder.binding.tvName.setText( user.get("firstName").toString() + " " + user.get("lastName").toString());
                     }
                     Toast.makeText(getContext(), "Message", Toast.LENGTH_SHORT).show();
                 } else {
@@ -124,14 +125,8 @@ public class SplitRecyclerAdapter extends
 
         viewHolder.binding.etSplit.addTextChangedListener(new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Double restAmount=0.0;
                 Double editSplit = Double.valueOf(viewHolder.binding.etSplit.getText().toString());
                 for(Split split : mSplits){
@@ -144,7 +139,7 @@ public class SplitRecyclerAdapter extends
                     if(restAmount + editSplit > totalBefore ){
                         String message = "Amount exceeded by $" + (restAmount + editSplit- totalBefore);
                         Toast.makeText(getContext(), message
-                                 , Toast.LENGTH_SHORT).show();
+                                , Toast.LENGTH_SHORT).show();
                     }
 
                     if(restAmount + editSplit < totalBefore ){
@@ -156,6 +151,15 @@ public class SplitRecyclerAdapter extends
                     mSplits.get(position).setAmount(editSplit);
                     //ToDO Add to the DB directly
                 }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
         });
 

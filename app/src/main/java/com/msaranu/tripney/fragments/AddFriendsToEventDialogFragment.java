@@ -22,6 +22,7 @@ import com.msaranu.tripney.databinding.FragmentAddFriendsDialogBinding;
 import com.msaranu.tripney.databinding.FragmentAddNewFriendsBinding;
 import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.models.EventUser;
+import com.msaranu.tripney.models.TripUser;
 import com.msaranu.tripney.models.User;
 import com.msaranu.tripney.models.UserFriend;
 import com.parse.FindCallback;
@@ -41,13 +42,14 @@ import butterknife.ButterKnife;
  */
 public class AddFriendsToEventDialogFragment extends DialogFragment {
 
-    private static final String SEARCH_STRING = "search_string";
+    private static final String TRIP_STRING = "trip_string";
     ArrayList<ParseUser> peopleList;
     AddFriendsToEventAdapter adapter;
     String search_key;
     FragmentAddFriendsDialogBinding binding;
     ParseUser user;
     ArrayList<EventUser> eventUserList;
+    String tripID;
 
 
 
@@ -57,10 +59,10 @@ public class AddFriendsToEventDialogFragment extends DialogFragment {
 
 
 
-    public static AddFriendsToEventDialogFragment newInstance() {
+    public static AddFriendsToEventDialogFragment newInstance(String tripID) {
         AddFriendsToEventDialogFragment addNewFriendsFragment = new AddFriendsToEventDialogFragment();
         Bundle args = new Bundle();
-        // args.putString(SEARCH_STRING, searchStr);
+         args.putString(TRIP_STRING, tripID);
         addNewFriendsFragment.setArguments(args);
         return addNewFriendsFragment;
     }
@@ -95,6 +97,7 @@ public class AddFriendsToEventDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        tripID = getArguments().getString(TRIP_STRING);
         setRecyclerView(view);
         Button btnSave = (Button) view.findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -131,16 +134,16 @@ public class AddFriendsToEventDialogFragment extends DialogFragment {
 
         ParseQuery<ParseUser> query = ParseUser.getQuery();
 
-        ParseQuery<UserFriend> UFquery = ParseQuery.getQuery(UserFriend.class);
-        UFquery.whereEqualTo("userID", ParseUser.getCurrentUser().getObjectId());
+        ParseQuery<TripUser> UFquery = ParseQuery.getQuery(TripUser.class);
+        UFquery.whereEqualTo("tripID", tripID);
 
 
         // Execute the find asynchronously
-        UFquery.findInBackground(new FindCallback<UserFriend>() {
-            public void done(List<UserFriend> itemList, ParseException e) {
+        UFquery.findInBackground(new FindCallback<TripUser>() {
+            public void done(List<TripUser> itemList, ParseException e) {
                 if (e == null) {
-                    for(UserFriend userFriend : itemList){
-                        String friendID = userFriend.get("friendID").toString();
+                    for(TripUser tripUser : itemList){
+                        String friendID = tripUser.get("userID").toString();
 
                         query.whereEqualTo("objectId", friendID);
 
