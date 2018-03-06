@@ -22,6 +22,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +38,16 @@ public class AddFriendsToTripAdapter extends
     private List<ParseUser> mPeople;
     // Store the context for easy access
     private Context mContext;
+    private List<TripUser> tripUserList;
+    private String tripID;
 
+    public List<TripUser> getTripUserList() {
+        return tripUserList;
+    }
+
+    public void setTripUser(List<TripUser> tripUserList) {
+        this.tripUserList = tripUserList;
+    }
 
     // Pass in the contact array into the constructor
     public AddFriendsToTripAdapter(Context context, List<ParseUser> people) {
@@ -93,6 +103,7 @@ public class AddFriendsToTripAdapter extends
         RecyclerView.ViewHolder viewHolder;
         personView = inflater.inflate(R.layout.item_trip_friend, parent, false);
         viewHolder = new ViewHolder(personView);
+        tripUserList = new ArrayList<TripUser>();
 
         return viewHolder;
 
@@ -105,6 +116,8 @@ public class AddFriendsToTripAdapter extends
         configureViewHolder(vh,mPeople.get(position), position);
 
     }
+
+
 
     private void configureViewHolder(ViewHolder viewHolder, ParseUser person, int position) {
 
@@ -123,9 +136,17 @@ public class AddFriendsToTripAdapter extends
             public void onClick(View view) {
 
                 ParseQuery<TripUser> queryUserTrip = ParseQuery.getQuery("TripUser");
-                //queryUserTrip.whereEqualTo("userID", person.getObjectId());
+                TripUser tUser = new TripUser();
+                if(viewHolder.binding.ckAdd.isChecked()){
+                    tUser.setUserID(person.getObjectId().toString());
+                    tUser.setStatus("Y");
+                }else{
+                    tUser.setUserID(person.getObjectId().toString());
+                    tUser.setStatus("N");
+                }
+                tripUserList.add(tUser);
 
-                queryUserTrip.getInBackground(person.getObjectId().toString(), new GetCallback<TripUser>() {
+                /*queryUserTrip.getInBackground(person.getObjectId().toString(), new GetCallback<TripUser>() {
                     public void done(TripUser tFriend, ParseException e) {
                         if (e == null) {
                             String status ="N";
@@ -141,7 +162,7 @@ public class AddFriendsToTripAdapter extends
                             tUser.setStatus("Y");
                         }
                     }
-                });
+                });*/
             }
         });
     }

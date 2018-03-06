@@ -37,7 +37,7 @@
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
             android:text="FirstName"
-            android:textSize="20sp" />
+            android:textSize="10sp" />
 
 
         <TextView
@@ -48,7 +48,7 @@
             android:layout_toEndOf="@id/tvFirstName"
             android:text="LastName"
             android:textColor="@color/colorPrimary"
-            android:textSize="20sp"
+            android:textSize="10sp"
             android:textStyle="bold" />
 
         <TextView
@@ -59,20 +59,18 @@
             android:layout_alignStart="@id/tvFirstName"
             android:text="UserId"
             android:textColor="@color/colorPrimary"
-            android:textSize="15sp"
+            android:textSize="10sp"
             />
 
         <CheckBox
             android:id="@+id/ckAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tvLastName"
+            android:layout_alignBottom="@id/tvUserId"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_gravity="end"
-            android:layout_marginEnd="9dp"
-            android:textAllCaps="false"
-            android:text="Status"
+            android:layout_marginEnd="20dp"
          />
 
 

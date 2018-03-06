@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +14,26 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.models.Trip;
+import com.msaranu.tripney.models.TripUser;
 import com.msaranu.tripney.models.User;
 import com.msaranu.tripney.utilities.DateUtils;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -40,8 +51,11 @@ private EditText tripName;
     private EditText tripLocation;
     private ImageButton tripAddFriends;
     private Spinner spinnerTrip;
+    private LinearLayout llFriendsListHorizontal;
     private Button save;
     Trip trip;
+    private List<TripUser> tripUserList;
+    private List<ParseUser> usersAdded;
 
     public AddTripFragment() {
         // Empty constructor is required for DialogFragment
@@ -93,8 +107,61 @@ private EditText tripName;
     }
 
     @Override
-    public void onFinishAddFriendsDialog() {
+    public void onFinishAddFriendsDialog(List<TripUser> tripUserList) {
         //TODO Add horizontal scroll view here
+        this.tripUserList = tripUserList;  
+      addFriendsLayout();
+
+    }
+
+    private void addFriendsLayout() {
+        
+        for(TripUser tripUser: tripUserList ){
+
+            ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.whereEqualTo("objectId", tripUser.getUserID());
+
+            query.findInBackground(new FindCallback<ParseUser>() {
+                public void done(List<ParseUser> itemList, ParseException e) {
+                    if (e == null) {
+                        for(ParseUser userF : itemList){
+
+                            usersAdded.add(userF);
+
+                            LayoutInflater inflater = LayoutInflater.from(getContext());
+                            View llFriendsInnerList= inflater.inflate(R.layout.layout_friends, null, false);
+
+                            ImageView userImage = (ImageView) llFriendsInnerList.findViewById(R.id.ivUserProfileImage);
+                            TextView userName = (TextView) llFriendsInnerList.findViewById(R.id.tvName);
+
+                            userName.setText(userF.get("firstName").toString() + "\n" + userF.get("lastName").toString());
+
+                            String profileURL;
+                            if(userF.get("profilePicture")!=null) {
+                                Glide.with(getContext()).load(userF.get("profilePicture").toString())
+                                        .fitCenter()
+                                        .into(userImage);
+
+                            }else{
+                                Glide.with(getContext()).load(R.drawable.ic_person)
+                                        .fitCenter()
+                                        .into(userImage);
+                            }
+
+                            llFriendsListHorizontal.addView(llFriendsInnerList);
+
+
+                        }
+                    }
+                    else {
+                        Log.d("item", "Error: " + e.getMessage());
+                    }
+                }
+
+            });
+
+        }
+
     }
 
 
@@ -111,6 +178,7 @@ private EditText tripName;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        usersAdded = new ArrayList<ParseUser>();
         trip = new Trip();
         super.onViewCreated(view, savedInstanceState);
         // Get field from view
@@ -119,6 +187,7 @@ private EditText tripName;
         tripDate = (EditText) view.findViewById(R.id.etTripDate);
         tripLocation = (EditText) view.findViewById(R.id.etTripLocation);
         tripAddFriends = (ImageButton)  view.findViewById(R.id.ibAddFriends);
+        llFriendsListHorizontal = (LinearLayout) view.findViewById(R.id.llFriendsHorizontal);
         save = (Button) view.findViewById(R.id.btnTripSave);
 
 
@@ -150,7 +219,7 @@ private EditText tripName;
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
-                AddFriendsDialogFragment addFriendsDialogFragment = new AddFriendsDialogFragment();
+                AddFriendsDialogFragment addFriendsDialogFragment = AddFriendsDialogFragment.newInstance();
                 addFriendsDialogFragment.setTargetFragment(AddTripFragment.this, 300);
                 addFriendsDialogFragment.show(fm, "fragment_add_users");
             }
@@ -166,7 +235,19 @@ private EditText tripName;
                 trip.setmLocation(tripLocation.getText().toString());
                 trip.setmUserID(ParseUser.getCurrentUser().getObjectId());
                 trip.setmStatus("New");
-                trip.saveInBackground();
+                trip.saveInBackground(new SaveCallback() {
+                                          @Override
+                                          public void done(ParseException e) {
+                                              for (TripUser pU: tripUserList) {
+                                                  pU.setTripID(trip.getObjectId());
+                                                  pU.saveInBackground();
+                                              }
+                                          }
+                                      }
+                );
+
+
+
                 AddTripFragmentDialogListener addTripFragmentDialogListener =
                         (AddTripFragmentDialogListener) getActivity();
                 addTripFragmentDialogListener.onFinishEditDialog(trip);

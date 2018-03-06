@@ -198,11 +198,26 @@
                     android:textColor="@color/hintColor"
                     android:textSize="14sp" />
 
+                <LinearLayout
+                    android:id="@+id/llFriendsHorizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/tvTripInviteFriends"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="14dp"
+                    android:orientation="horizontal">
+
+
+                </LinearLayout>
+
                 <ImageButton
                     android:id="@+id/ibAddFriends"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvTripInviteFriends"
+                   android:layout_toEndOf="@+id/llFriendsHorizontal"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"

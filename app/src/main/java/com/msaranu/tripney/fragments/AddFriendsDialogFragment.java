@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.msaranu.tripney.R;
@@ -19,6 +20,8 @@ import com.msaranu.tripney.adapters.AddFriendsToTripAdapter;
 import com.msaranu.tripney.adapters.SearchAddFriendsAdapter;
 import com.msaranu.tripney.databinding.FragmentAddFriendsDialogBinding;
 import com.msaranu.tripney.databinding.FragmentAddNewFriendsBinding;
+import com.msaranu.tripney.models.Trip;
+import com.msaranu.tripney.models.TripUser;
 import com.msaranu.tripney.models.User;
 import com.msaranu.tripney.models.UserFriend;
 import com.parse.FindCallback;
@@ -44,6 +47,7 @@ public class AddFriendsDialogFragment extends DialogFragment {
     String search_key;
     FragmentAddFriendsDialogBinding binding;
     ParseUser user;
+    ArrayList<TripUser> tripUserList;
 
 
 
@@ -51,49 +55,61 @@ public class AddFriendsDialogFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    public interface AddFriendsFragmentDialogListener{
-        public void onFinishAddFriendsDialog();
-    }
 
 
-    public static AddFriendsDialogFragment newInstance(String searchStr) {
+    public static AddFriendsDialogFragment newInstance() {
         AddFriendsDialogFragment addNewFriendsFragment = new AddFriendsDialogFragment();
         Bundle args = new Bundle();
-        args.putString(SEARCH_STRING, searchStr);
+       // args.putString(SEARCH_STRING, searchStr);
         addNewFriendsFragment.setArguments(args);
         return addNewFriendsFragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-  //      if (SEARCH_STRING != null)
-//            search_key = getArguments().getString(SEARCH_STRING);
+    public interface AddFriendsFragmentDialogListener{
+        public void onFinishAddFriendsDialog(List<TripUser> tUserList);
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_friends_dialog, parent, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_friends_dialog, container, false);
         View view = binding.getRoot();
         ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        // Get existing layout params for the window
+        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+        // Assign window properties to fill the parent
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
+        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+        // Call super onResume after sizing
+        super.onResume();
+    }
+
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            // Inflate the layout for this fragment
         setRecyclerView(view);
         Button btnSave = (Button) view.findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 AddFriendsDialogFragment.AddFriendsFragmentDialogListener addFriendsFragmentDialogListener =
                         (AddFriendsDialogFragment.AddFriendsFragmentDialogListener) getTargetFragment();
-                addFriendsFragmentDialogListener.onFinishAddFriendsDialog();
+                addFriendsFragmentDialogListener.onFinishAddFriendsDialog(adapter.getTripUserList());
                 dismiss();
 
             }
         });
 
         //  fragmentAddNewFriends..setText(trip.getmDate());
-        return view;
     }
 
     private void setRecyclerView(View view) {
@@ -105,9 +121,10 @@ public class AddFriendsDialogFragment extends DialogFragment {
         // Initialize contacts
         //events = Event.createTempEvents(20);
         //TODO: pass tripID and get corresponding events
-        // Create adapter passing in the sample user data
+       // Create adapter passing in the sample user data
         adapter = new AddFriendsToTripAdapter(this.getContext(), peopleList);
         // Attach the adapter to the recyclerview to populate items
+
         rvPeople.setAdapter(adapter);
         // Set layout manager to position the items
         rvPeople.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -123,9 +140,9 @@ public class AddFriendsDialogFragment extends DialogFragment {
             public void done(List<UserFriend> itemList, ParseException e) {
                 if (e == null) {
                     for(UserFriend userFriend : itemList){
-                        String friendID = userFriend.getFriendID();
+                        String friendID = userFriend.get("friendID").toString();
 
-                        query.whereEqualTo("userID", friendID);
+                        query.whereEqualTo("objectId", friendID);
 
                         query.findInBackground(new FindCallback<ParseUser>() {
                             public void done(List<ParseUser> itemList, ParseException e) {

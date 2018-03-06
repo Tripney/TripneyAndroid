@@ -20,6 +20,7 @@ import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFra
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.models.Event;
 import com.msaranu.tripney.models.Trip;
+import com.msaranu.tripney.models.TripUser;
 import com.msaranu.tripney.models.User;
 import com.msaranu.tripney.utilities.DateUtils;
 import com.parse.ParseUser;
@@ -59,7 +60,12 @@ public class EditTripDetailDialogFragment extends DialogFragment implements AddF
             return frag;
         }
 
-        public interface EditTripFragmentDialogListener {
+    @Override
+    public void onFinishAddFriendsDialog(List<TripUser> tUserList) {
+
+    }
+
+    public interface EditTripFragmentDialogListener {
             void onFinishEditDialog(Event event);
         }
 
@@ -95,11 +101,6 @@ public class EditTripDetailDialogFragment extends DialogFragment implements AddF
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
         // Call super onResume after sizing
         super.onResume();
-
-    }
-
-    @Override
-    public void onFinishAddFriendsDialog() {
 
     }
 

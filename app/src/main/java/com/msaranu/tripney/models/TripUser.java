@@ -65,10 +65,10 @@ public class TripUser extends ParseObject implements Parcelable {
         this.put("userID",userID);
     }
 
-    public String getFriendID() {
+    public String getTripID() {
         return getString("tripID");    }
 
-    public void setFriendID(String tripID) {
+    public void setTripID(String tripID) {
         this.tripID = tripID;
         this.put("tripID",tripID);
 
