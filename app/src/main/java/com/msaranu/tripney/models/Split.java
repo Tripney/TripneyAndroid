@@ -13,22 +13,29 @@ import com.parse.ParseObject;
 @ParseClassName("Split")
 public class Split extends ParseObject implements Parcelable {
 
+    public String splitID;
     public String userID;
     public String eventID;
     public double amount;
+    public String type;
 
     public Split(){}
 
     public Split(Parcel in) {
         userID = in.readString();
         eventID = in.readString();
+        splitID = in.readString();
         amount = in.readDouble();
+        type = in.readString();
     }
 
 
     public void loadInstanceVariables() {
+        splitID = getObjectId();
         eventID =  getString("eventID");
         userID = getString("userID");
+        splitID = getString("splitID");
+        type = getString("type");
         amount = getDouble("amount");
     }
 
@@ -37,8 +44,11 @@ public class Split extends ParseObject implements Parcelable {
         loadInstanceVariables();
         dest.writeString(userID);
         dest.writeString(eventID);
-        dest.writeDouble(amount);
-    }
+            dest.writeString(splitID);
+            dest.writeDouble(amount);
+        dest.writeString(type);
+
+        }
 
     @Override
     public int describeContents() {
@@ -76,6 +86,15 @@ public class Split extends ParseObject implements Parcelable {
         this.put("eventID", eventID);
     }
 
+    public String getSplitID() {
+        return getString("splitID");
+    }
+
+    public void setSplitID(String splitID) {
+        this.splitID = splitID;
+        this.put("splitID", splitID);
+    }
+
     public double getAmount() {
         return getDouble("amount");
     }
@@ -83,5 +102,14 @@ public class Split extends ParseObject implements Parcelable {
     public void setAmount(double amount) {
         this.amount = amount;
         this.put("amount", amount);
+    }
+
+    public String getType() {
+        return getString("type");
+    }
+
+    public void setType(String type) {
+        this.type = type;
+        this.put("type", type);
     }
 }

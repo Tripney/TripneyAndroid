@@ -23,13 +23,12 @@
             android:layout_weight="0.8"
             android:text="Name"/>
 
-        <EditText
-            android:id="@+id/etSplit"
-             android:layout_width="wrap_content"
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_yes"
             android:layout_weight="0.2"
-            android:text="">
-        </EditText>
+            />
 
     </LinearLayout>
 

@@ -3,9 +3,7 @@ package com.msaranu.tripney.fragments;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,14 +14,12 @@ import android.widget.Toast;
 
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.adapters.SplitRecyclerAdapter;
-import com.msaranu.tripney.adapters.SplitRecyclerAdapter;
 import com.msaranu.tripney.databinding.FragmentSplitEqualBinding;
-import com.msaranu.tripney.databinding.FragmentTripThingsToDoBinding;
-import com.msaranu.tripney.models.Event;
 import com.msaranu.tripney.models.EventUser;
 import com.msaranu.tripney.models.Split;
 import com.msaranu.tripney.models.Trip;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
@@ -57,11 +53,16 @@ public class SplitEqualFragment extends android.support.v4.app.Fragment  {
     }
 
 
-    public static SplitEqualFragment newInstance(String eventID, Double amount) {
+    public interface splitListener{
+        void addSplits(List<Split> splits);
+    }
+
+    public static SplitEqualFragment newInstance(String eventID, Double amount, ArrayList<Split> splits) {
         SplitEqualFragment tripDetailFragment = new SplitEqualFragment();
         Bundle args = new Bundle();
         args.putString(EVENT_ID, eventID);
         args.putDouble(AMOUNT, amount);
+        args.putParcelableArrayList("SPLIT_OBJ", splits);
         tripDetailFragment.setArguments(args);
         return tripDetailFragment;
     }
@@ -72,6 +73,8 @@ public class SplitEqualFragment extends android.support.v4.app.Fragment  {
         super.onCreate(savedInstanceState);
         eventID = getArguments().getString(EVENT_ID);
         amount = getArguments().getDouble(AMOUNT);
+        splits = getArguments().getParcelableArrayList("SPLIT_OBJ");
+
     }
 
 
@@ -83,6 +86,43 @@ public class SplitEqualFragment extends android.support.v4.app.Fragment  {
         View view = fragmentSplitEqualBinding.getRoot();
         ButterKnife.bind(this, view);
         setRecyclerView(view);
+        fragmentSplitEqualBinding.btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(Split split: splits){
+                    ParseQuery<Split> Splitquery = ParseQuery.getQuery(Split.class);
+                    Splitquery.whereEqualTo("objectId", split.getSplitID());
+                    // Execute the find asynchronously
+                    Splitquery.findInBackground(new FindCallback<Split>() {
+                        public void done(List<Split> itemList, ParseException e) {
+                            if (e == null) {
+                                if(itemList == null){
+                                    split.saveInBackground();
+                                }else{
+                                    ParseQuery<Split> splitquery = ParseQuery.getQuery(Split.class);
+                                    splitquery.getInBackground(split.getSplitID(), new GetCallback<Split>() {
+                                        public void done(Split splitObj, ParseException e) {
+                                            if (e == null) {
+                                                // Now let's update it with some new data. In this case, only cheatMode and score
+                                                // will get sent to the Parse Cloud. playerName hasn't changed.
+                                                splitObj.put("amount", split.amount);
+                                                splitObj.put("type", split.type);
+                                                splitObj.saveInBackground();
+                                            }
+                                        }
+                                    });
+                                }
+
+                            } else {
+                                Log.d("item", "Error: " + e.getMessage());
+                            }
+                        }
+                    });
+                    split.saveInBackground();
+                }
+            }
+        });
+
         return view;
     }
 
@@ -91,13 +131,12 @@ public class SplitEqualFragment extends android.support.v4.app.Fragment  {
 
         //recycler view
         RecyclerView rvSplits = (RecyclerView) view.findViewById(R.id.rvSplits);
-        splits = new ArrayList<Split>();
 
         // Initialize contacts
         //events = Split.createTempSplits(20);
         //TODO: pass tripID and get corresponding events
         // Create adapter passing in the sample user data
-        adapter = new SplitRecyclerAdapter(this.getContext(), splits, amount);
+        adapter = new SplitRecyclerAdapter(this.getContext(), splits, amount, "EQUAL");
         // Attach the adapter to the recyclerview to populate items
         rvSplits.setAdapter(adapter);
         // Set layout manager to position the items
