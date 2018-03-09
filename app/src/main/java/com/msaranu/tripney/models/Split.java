@@ -31,10 +31,9 @@ public class Split extends ParseObject implements Parcelable {
 
 
     public void loadInstanceVariables() {
-        splitID = getObjectId();
+        splitID = this.getObjectId();
         eventID =  getString("eventID");
         userID = getString("userID");
-        splitID = getString("splitID");
         type = getString("type");
         amount = getDouble("amount");
     }

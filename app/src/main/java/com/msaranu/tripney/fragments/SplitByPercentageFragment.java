@@ -86,22 +86,31 @@ public class SplitByPercentageFragment extends android.support.v4.app.Fragment  
         fragmentBinding.btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                double total=0;
+
+                for(Split split: splits) {
+                    total += split.amount;
+                }
+                if(total != amount){
+                    Toast.makeText(getContext(), "Total does not match"
+                            ,Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 for(Split split: splits){
-                    ParseQuery<Split> Splitquery = ParseQuery.getQuery(Split.class);
-                    Splitquery.whereEqualTo("objectId", split.getSplitID());
+                    ParseQuery<Split> splitQuery = ParseQuery.getQuery(Split.class);
+                    splitQuery.whereEqualTo("objectId", split.splitID);
                     // Execute the find asynchronously
-                    Splitquery.findInBackground(new FindCallback<Split>() {
+                    splitQuery.findInBackground(new FindCallback<Split>() {
                         public void done(List<Split> itemList, ParseException e) {
                             if (e == null) {
-                                if(itemList == null){
+                                if(itemList.size() ==0 ){
                                     split.saveInBackground();
                                 }else{
-                                    ParseQuery<Split> splitquery = ParseQuery.getQuery(Split.class);
-                                    splitquery.getInBackground(split.getSplitID(), new GetCallback<Split>() {
+                                    ParseQuery<Split> splitQuery = ParseQuery.getQuery(Split.class);
+                                    splitQuery.getInBackground(split.splitID, new GetCallback<Split>() {
                                         public void done(Split splitObj, ParseException e) {
                                             if (e == null) {
-                                                // Now let's update it with some new data. In this case, only cheatMode and score
-                                                // will get sent to the Parse Cloud. playerName hasn't changed.
                                                 splitObj.put("amount", split.amount);
                                                 splitObj.put("type", split.type);
                                                 splitObj.saveInBackground();
@@ -119,6 +128,7 @@ public class SplitByPercentageFragment extends android.support.v4.app.Fragment  
                 }
             }
         });
+
 
         return view;
     }
@@ -138,56 +148,6 @@ public class SplitByPercentageFragment extends android.support.v4.app.Fragment  
         rvSplits.setAdapter(adapter);
         // Set layout manager to position the items
         rvSplits.setLayoutManager(new LinearLayoutManager(this.getContext()));
-
-
-        ParseQuery<Split> query = ParseQuery.getQuery(Split.class);
-        query.whereEqualTo("eventID", eventID);
-
-        ParseQuery<EventUser> eventQuery = ParseQuery.getQuery(EventUser.class);
-        eventQuery.whereEqualTo("eventID", eventID);
-
-
-
-        // Execute the find asynchronously
-        query.findInBackground(new FindCallback<Split>() {
-            public void done(List<Split> itemList, ParseException e) {
-                if (e == null) {
-                    for(Split split : itemList){
-                        splits.add(split);
-                    }
-                    Toast.makeText(getContext(), "Message", Toast.LENGTH_SHORT).show();
-                    if(splits.size() == 0) {
-                        //TODO Add New splits
-
-                        eventQuery.findInBackground(new FindCallback<EventUser>() {
-                            public void done(List<EventUser> itemList, ParseException e) {
-                                if (e == null) {
-                                    for(EventUser eventUser : itemList){
-                                        Split split = new Split();
-                                        split.setEventID(eventID);
-                                        split.setUserID(eventUser.get("userID").toString());
-                                        splits.add(split);
-                                    }
-                                    adapter.notifyDataSetChanged();
-
-                                    Toast.makeText(getContext(), "Message", Toast.LENGTH_SHORT).show();
-
-                                } else {
-                                    Log.d("item", "Error: " + e.getMessage());
-                                }
-                            }
-                        });
-
-
-
-                    }
-                    adapter.notifyDataSetChanged();
-
-                } else {
-                    Log.d("item", "Error: " + e.getMessage());
-                }
-            }
-        });
 
     }
 

@@ -128,7 +128,7 @@ public class SplitRecyclerAdapter extends
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         // Return a new holder instance
-        RecyclerView.ViewHolder viewHolder;
+        RecyclerView.ViewHolder viewHolder = null;
         View splitView;
 
         // Inflate the custom layout
@@ -145,12 +145,14 @@ public class SplitRecyclerAdapter extends
             viewHolder = new ViewHolderAmount(splitView);
             return viewHolder;
 
-        }else {
+        }else if (splitType == "EQUAL"){
                 splitView = inflater.inflate(R.layout.item_split_equal, parent, false);
                 viewHolder = new ViewHolderEqual(splitView);
                 return viewHolder;
-            }
+        }else{
+            return viewHolder;
 
+        }
 
     }
 
@@ -177,10 +179,12 @@ public class SplitRecyclerAdapter extends
                 SplitRecyclerAdapter.ViewHolderPercentage viewHolderPercentage = (SplitRecyclerAdapter.ViewHolderPercentage) viewHolder;
                 configureVHPercentage(viewHolderPercentage, splitPos, position);
                 break;
-            default:
+            case "EQUAL":
                 SplitRecyclerAdapter.ViewHolderEqual viewHolderEqual = (SplitRecyclerAdapter.ViewHolderEqual) viewHolder;
                 configureVHEqual(viewHolderEqual, splitPos, position);
                 break;
+            default:
+                    break;
 
         }
     }
@@ -191,23 +195,7 @@ public class SplitRecyclerAdapter extends
         Double percentAmount = (splitPos.getAmount()/eventPrice)*100.0;
         viewHolder.binding.etSplit.setText(percentAmount.toString());
 
-        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
-        String userID = splitPos.get("userID").toString();
-        query.whereEqualTo("objectId", userID);
-
-        // Execute the find asynchronously
-        query.findInBackground(new FindCallback<ParseUser>() {
-            public void done(List<ParseUser> itemList, ParseException e) {
-                if (e == null) {
-                    for (ParseUser user : itemList) {
-                        viewHolder.binding.tvName.setText(user.get("firstName").toString() + " " + user.get("lastName").toString());
-                    }
-                    Toast.makeText(getContext(), "Message", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d("item", "Error: " + e.getMessage());
-                }
-            }
-        });
+        setUserName(viewHolder,splitPos);
 
         viewHolder.binding.etSplit.addTextChangedListener(new TextWatcher() {
 
@@ -235,13 +223,10 @@ public class SplitRecyclerAdapter extends
                         Toast.makeText(getContext(), message
                                 , Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    mSplits.get(position).setAmount(editSplit);
-
-                        mSplits.get(position).setType("P");
-
-                        //ToDO Add to the DB directly
                 }
+                    mSplits.get(position).setAmount(editSplit);
+                    mSplits.get(position).setType("P");
+
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -261,24 +246,7 @@ public class SplitRecyclerAdapter extends
         Double byAmount = splitPos.getAmount();
         viewHolder.binding.etSplit.setText(byAmount.toString());
 
-
-        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
-        String userID = splitPos.get("userID").toString();
-        query.whereEqualTo("objectId", userID);
-
-        // Execute the find asynchronously
-        query.findInBackground(new FindCallback<ParseUser>() {
-            public void done(List<ParseUser> itemList, ParseException e) {
-                if (e == null) {
-                    for (ParseUser user : itemList) {
-                        viewHolder.binding.tvName.setText(user.get("firstName").toString() + " " + user.get("lastName").toString());
-                    }
-                    Toast.makeText(getContext(), "Message", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d("item", "Error: " + e.getMessage());
-                }
-            }
-        });
+        setUserName(viewHolder,splitPos);
 
 
         viewHolder.binding.etSplit.addTextChangedListener(new TextWatcher() {
@@ -305,12 +273,10 @@ public class SplitRecyclerAdapter extends
                         Toast.makeText(getContext(), message
                                 , Toast.LENGTH_SHORT).show();
                     }
-                }else{
+                }
                     mSplits.get(position).setAmount(editSplit);
                     mSplits.get(position).setType("A");
 
-                    //ToDO Add to the DB directly
-                }
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -336,6 +302,17 @@ public class SplitRecyclerAdapter extends
     private void configureVHEqual(ViewHolderEqual viewHolder, Split splitPos, int position) {
 
         Double equalAmount = splitPos.getAmount();
+        setUserName(viewHolder,splitPos);
+
+        if(equalAmount ==0) {
+            mSplits.get(position).setAmount(eventPrice/2);
+        }
+        mSplits.get(position).setType("E");
+
+    }
+
+
+    void setUserName(final RecyclerView.ViewHolder viewHolder , Split splitPos){
 
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
         String userID = splitPos.get("userID").toString();
@@ -346,7 +323,19 @@ public class SplitRecyclerAdapter extends
             public void done(List<ParseUser> itemList, ParseException e) {
                 if (e == null) {
                     for (ParseUser user : itemList) {
-                        viewHolder.binding.tvName.setText(user.get("firstName").toString() + " " + user.get("lastName").toString());
+
+
+                        if(splitPos.getType() == "E"){
+                            SplitRecyclerAdapter.ViewHolderEqual vH = (ViewHolderEqual) viewHolder;
+                            vH.binding.tvName.setText(user.get("firstName").toString() + " " + user.get("lastName").toString());
+
+                        }else  if(splitPos.getType() == "P"){
+                            SplitRecyclerAdapter.ViewHolderPercentage vH = (ViewHolderPercentage) viewHolder;
+                            vH.binding.tvName.setText(user.get("firstName").toString() + " " + user.get("lastName").toString());
+                        }else  if(splitPos.getType() == "A"){
+                            SplitRecyclerAdapter.ViewHolderAmount vH = (ViewHolderAmount) viewHolder;
+                            vH.binding.tvName.setText(user.get("firstName").toString() + " " + user.get("lastName").toString());
+                        }
                     }
                     Toast.makeText(getContext(), "Message", Toast.LENGTH_SHORT).show();
                 } else {
@@ -354,11 +343,5 @@ public class SplitRecyclerAdapter extends
                 }
             }
         });
-
-        if(equalAmount ==0) {
-            mSplits.get(position).setAmount(eventPrice/2);
-        }
-        mSplits.get(position).setType("E");
-
     }
 }

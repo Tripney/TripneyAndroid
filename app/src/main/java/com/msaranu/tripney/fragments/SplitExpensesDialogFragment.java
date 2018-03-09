@@ -4,21 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.models.Split;
-import com.msaranu.tripney.models.Trip;
-import com.msaranu.tripney.models.User;
-import com.msaranu.tripney.utilities.DateUtils;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -35,6 +29,7 @@ public class SplitExpensesDialogFragment extends DialogFragment {
     Button btnAmount;
     Button btnPercentage;
     ArrayList<Split> splitAmounts;
+    String type;
 
 
     public SplitExpensesDialogFragment() {
@@ -62,7 +57,6 @@ public class SplitExpensesDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        splitAmounts = new ArrayList<Split>();
         if (getArguments() != null) {
             amount = getArguments().getDouble("price");
             eventID = getArguments().getString("eventID");
@@ -85,25 +79,14 @@ public class SplitExpensesDialogFragment extends DialogFragment {
             }
         });
 
-        if(splitAmounts == null && splitAmounts.size() >0 ){
-            if(splitAmounts.get(0).getType() == "P"){
-                getChildFragmentManager().beginTransaction().replace(R.id.flContainer, SplitByPercentageFragment.newInstance(eventID, amount, getSplits())).commit();
 
-            }else  if(splitAmounts.get(0).getType() == "A"){
-                getChildFragmentManager().beginTransaction().replace(R.id.flContainer, SplitByAmountFragment.newInstance(eventID, amount, getSplits())).commit();
-
-            }else  if(splitAmounts.get(0).getType() == "E"){
-                getChildFragmentManager().beginTransaction().replace(R.id.flContainer, SplitEqualFragment.newInstance(eventID, amount, getSplits())).commit();
-            }
-        }else{
-            getChildFragmentManager().beginTransaction().replace(R.id.flContainer, SplitEqualFragment.newInstance(eventID, amount, getSplits())).commit();
-        }
+        getSplits(null, false);
 
         btnEqual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Default Load
-                getChildFragmentManager().beginTransaction().replace(R.id.flContainer, SplitEqualFragment.newInstance(eventID, amount, getSplits())).commit();
+                getSplits("E",true);
             }
         });
 
@@ -111,7 +94,7 @@ public class SplitExpensesDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 //Default Load
-                getChildFragmentManager().beginTransaction().replace(R.id.flContainer, SplitByAmountFragment.newInstance(eventID, amount, getSplits())).commit();
+                getSplits("A", true);
             }
         });
 
@@ -119,31 +102,47 @@ public class SplitExpensesDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 //Default Load
-                getChildFragmentManager().beginTransaction().replace(R.id.flContainer, SplitByPercentageFragment.newInstance(eventID, amount, getSplits())).commit();
+                getSplits("P", true);
             }
         });
 
     }
 
-    private ArrayList<Split> getSplits() {
+    private void getSplits(String splitType, boolean forcePress) {
 
         ParseQuery<Split> Splitquery = ParseQuery.getQuery(Split.class);
         Splitquery.whereEqualTo("eventID", eventID);
-
+        splitAmounts = new ArrayList<Split>();
+         type =splitType;
 
         // Execute the find asynchronously
         Splitquery.findInBackground(new FindCallback<Split>() {
             public void done(List<Split> itemList, ParseException e) {
                 if (e == null) {
                     for (Split split : itemList) {
+                        split.loadInstanceVariables();
                         splitAmounts.add(split);
                     }
+                    if(!forcePress){
+                        if(splitAmounts != null && splitAmounts.size() > 0){
+                            type = splitAmounts.get(0).type;
+                        } else{
+                            type ="E";
+                        }
+                    }
+                        if (type.equals("E")) {
+                            getChildFragmentManager().beginTransaction().replace(R.id.flContainer, SplitEqualFragment.newInstance(eventID, amount, splitAmounts)).commit();
+                        } else if (type.equals("P")) {
+                            getChildFragmentManager().beginTransaction().replace(R.id.flContainer, SplitByPercentageFragment.newInstance(eventID, amount, splitAmounts)).commit();
+                        } else if (type.equals("A")) {
+                            getChildFragmentManager().beginTransaction().replace(R.id.flContainer, SplitByAmountFragment.newInstance(eventID, amount, splitAmounts)).commit();
+                        }
+
                 } else {
                     Log.d("item", "Error: " + e.getMessage());
                 }
             }
         });
-        return splitAmounts;
     }
 
 }
