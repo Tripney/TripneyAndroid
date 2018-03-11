@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.databinding.FragmentDetailTripBinding;
+import com.msaranu.tripney.models.Event;
 import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.utilities.DateUtils;
 import com.parse.ParseUser;
@@ -41,7 +42,7 @@ import butterknife.ButterKnife;
  * Use the {@link TripDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TripDetailFragment extends android.support.v4.app.Fragment {
+public class TripDetailFragment extends android.support.v4.app.Fragment implements EditTripDetailDialogFragment.EditTripFragmentDialogListener {
 
     MapView mMapView;
     ImageButton ivEditIcon;
@@ -93,9 +94,12 @@ public class TripDetailFragment extends android.support.v4.app.Fragment {
         fragmentBinding.tvTripName.setText(trip.mName);
         fragmentBinding.tvTripStatus.setText(trip.mStatus);
 
-            Glide.with(this).load(R.drawable.eventimage)
+
+        if(trip.mbckgrndUrl != null) {
+            Glide.with(this).load(trip.mbckgrndUrl)
                     .fitCenter()
                     .into(fragmentBinding.ivTripBckgrndImage);
+        }
 
         //SetUp Listeners
         setSourceSiteLinkIntentListener();
@@ -245,7 +249,11 @@ public class TripDetailFragment extends android.support.v4.app.Fragment {
     }
 
 
-
-
+    @Override
+    public void onFinishEditDialog(Trip trip) {
+        this.trip = trip;
+        getFragmentManager().beginTransaction().
+                replace(R.id.flContainer, TripDetailFragment.newInstance(trip)).commit();
+    }
 
 }

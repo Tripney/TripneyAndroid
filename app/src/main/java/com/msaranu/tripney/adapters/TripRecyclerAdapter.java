@@ -2,6 +2,10 @@ package com.msaranu.tripney.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +19,7 @@ import com.msaranu.tripney.decorators.ItemClickSupport;
 import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.utilities.DateUtils;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -117,9 +122,20 @@ public class TripRecyclerAdapter extends
         viewHolder.binding.tvTripStatus.setText(trip.get("mStatus").toString());
 
 
-                       Glide.with(mContext).load(R.drawable.eventimage)
-                                .fitCenter()
-                                .into(viewHolder.binding.ivTripBckgrndImage);
+      /*  Bitmap bMap2 = BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.img_background);
+        MediaStore.Images.Media.insertImage(getContext().getContentResolver(), bMap2, "img3" , "test");*/
+
+
+        if(trip.get("mbckgrndUrl") != null) {
+            Glide.with(mContext).load(trip.get("mbckgrndUrl").toString())
+                    .fitCenter()
+                    .into(viewHolder.binding.ivTripBckgrndImage);
+        }else{
+            Glide.with(mContext).load(R.drawable.travel)
+                    .fitCenter()
+                    .into(viewHolder.binding.ivTripBckgrndImage);
+        }
     }
 
     // Returns the total count of items in the list

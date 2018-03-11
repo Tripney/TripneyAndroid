@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Trip extends ParseObject implements Parcelable {
 
 
-    public String _id;
+    public String tripID;
     public  String mName;
     public   String mDate;
     public String mStatus;
@@ -26,7 +26,7 @@ public class Trip extends ParseObject implements Parcelable {
 
 
     public Trip(String id, String name, String desc, String date, String status, String url){
-        _id =id;
+        tripID =id;
         mName=name;
         mDescription=desc;
         mDate=date;
@@ -36,7 +36,7 @@ public class Trip extends ParseObject implements Parcelable {
 
 
     protected Trip(Parcel in) {
-        _id = in.readString();
+        tripID = in.readString();
         mName = in.readString();
         mDate = in.readString();
         mStatus = in.readString();
@@ -59,14 +59,6 @@ public class Trip extends ParseObject implements Parcelable {
         }
     };
 
-    public String get_id() {
-        return  getObjectId();
-    }
-
-    public void set_id(String _id) {
-        this._id=_id;
-        this.put("_id",_id);
-    }
 
     public String getmName() {
         return  getString("mName");
@@ -76,6 +68,16 @@ public class Trip extends ParseObject implements Parcelable {
         this.mName = mName;
         this.put("mName",mName);
     }
+
+    public String getTripID() {
+        return  getObjectId();
+    }
+
+    public void setTripID(String tripID) {
+        this.tripID=tripID;
+        this.put("tripID",tripID);
+    }
+
 
     public String getmDate() {
         return  getString("mDate");
@@ -137,21 +139,21 @@ public class Trip extends ParseObject implements Parcelable {
     }
 
     public void loadInstanceVariables(){
-        _id = getObjectId();
+        tripID = getObjectId();
         mName = getString("mName");
         mDescription = getString("mDescription");
         mDate = getString("mDate");
         mStatus = getString("mStatus");
         mUserID=getString("mUserID");
         mlocation=getString("mlocation");
-
+        mbckgrndUrl = getString("mbckgrndUrl");
 
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         loadInstanceVariables();
-        dest.writeString(_id);
+        dest.writeString(tripID);
         dest.writeString(mName);
         dest.writeString(mDate);
         dest.writeString(mStatus);

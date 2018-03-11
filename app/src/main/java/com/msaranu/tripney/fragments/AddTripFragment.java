@@ -1,6 +1,9 @@
 package com.msaranu.tripney.fragments;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -26,6 +29,7 @@ import com.msaranu.tripney.R;
 import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.models.TripUser;
 import com.msaranu.tripney.models.User;
+import com.msaranu.tripney.services.ImageService;
 import com.msaranu.tripney.utilities.DateUtils;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -38,10 +42,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class AddTripFragment extends DialogFragment
  implements AddFriendsDialogFragment.AddFriendsFragmentDialogListener,
-        CalendarDatePickerDialogFragment.OnDateSetListener,  RadialTimePickerDialogFragment.OnTimeSetListener {
+        CalendarDatePickerDialogFragment.OnDateSetListener,  RadialTimePickerDialogFragment.OnTimeSetListener ,
+           PhotoAlertDialogFragment.PhotoAlertDialogFragmentListener {
+
 
 
 
@@ -56,6 +64,12 @@ private EditText tripName;
     Trip trip;
     private List<TripUser> tripUserList;
     private List<ParseUser> usersAdded;
+    private ImageView ivCameraImage;
+    private ImageView ivTripBckgrndImage;
+    ImageService imgService;
+    Uri file;
+    public final static int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 200;
+
 
     public AddTripFragment() {
         // Empty constructor is required for DialogFragment
@@ -72,9 +86,50 @@ private EditText tripName;
     }
 
     @Override
+    public void onFinishAlertDialog(String photoType) {
+        pickPicture();
+    }
+
+
+    @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
         tripDate.setText(monthOfYear+1 +"/"+dayOfMonth+ "/" +year);
         callTimePicker();
+    }
+
+
+    public void pickPicture() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, SELECT_IMAGE_ACTIVITY_REQUEST_CODE);
+
+    }
+
+
+
+    private void saveProfileImage(int requestCode) {
+        String filePath = null;
+        if (requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
+            filePath = imgService.getPath(file, getContext());
+        }
+
+        Bitmap bitmap = imgService.getBitMap(getContext(), filePath, file);
+        // Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(bitmap, screenSize);
+
+        ivTripBckgrndImage.setImageBitmap(bitmap);
+
+        imgService.saveParseFile(bitmap, trip);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
+                file = imageReturnedIntent.getData();
+            }
+            saveProfileImage(requestCode);
+        }
     }
 
     private void callTimePicker() {
@@ -173,6 +228,7 @@ private EditText tripName;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        imgService = ImageService.getInstance();
         return inflater.inflate(R.layout.fragment_add_trip, container);
     }
 
@@ -189,6 +245,9 @@ private EditText tripName;
         tripAddFriends = (ImageButton)  view.findViewById(R.id.ibAddFriends);
         llFriendsListHorizontal = (LinearLayout) view.findViewById(R.id.llFriendsHorizontal);
         save = (Button) view.findViewById(R.id.btnTripSave);
+        ivCameraImage = (ImageView) view.findViewById(R.id.ivCameraImage);
+        ivTripBckgrndImage = (ImageView) view.findViewById(R.id.ivTripBckgrndImage);
+
 
 
         // Fetch arguments from bundle and set title
@@ -215,6 +274,19 @@ private EditText tripName;
         });
 
 
+
+        ivCameraImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FragmentManager fm = getFragmentManager();
+                PhotoAlertDialogFragment fdf = PhotoAlertDialogFragment.newInstance();
+                fdf.setTargetFragment(AddTripFragment.this, 300);
+                fdf.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppDialogTheme);
+                fdf.show(fm, "FRAGMENT_MODAL_ALERT");
+            }
+        });
+
         tripAddFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,9 +310,11 @@ private EditText tripName;
                 trip.saveInBackground(new SaveCallback() {
                                           @Override
                                           public void done(ParseException e) {
-                                              for (TripUser pU: tripUserList) {
-                                                  pU.setTripID(trip.getObjectId());
-                                                  pU.saveInBackground();
+                                              if(tripUserList != null && tripUserList.size() >0) {
+                                                  for (TripUser pU : tripUserList) {
+                                                      pU.setTripID(trip.getObjectId());
+                                                      pU.saveInBackground();
+                                                  }
                                               }
                                           }
                                       }

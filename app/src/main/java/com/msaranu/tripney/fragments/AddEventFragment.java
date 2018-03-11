@@ -1,9 +1,13 @@
 package com.msaranu.tripney.fragments;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +29,7 @@ import com.msaranu.tripney.models.Event;
 import com.msaranu.tripney.models.EventUser;
 import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.models.EventUser;
+import com.msaranu.tripney.services.ImageService;
 import com.msaranu.tripney.utilities.DateUtils;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -36,12 +41,16 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class AddEventFragment extends DialogFragment  implements CalendarDatePickerDialogFragment.OnDateSetListener, 
-        RadialTimePickerDialogFragment.OnTimeSetListener, AddFriendsToEventDialogFragment.AddFriendsFragmentDialogListener {
+        RadialTimePickerDialogFragment.OnTimeSetListener, AddFriendsToEventDialogFragment.AddFriendsFragmentDialogListener ,
+           PhotoAlertDialogFragment.PhotoAlertDialogFragmentListener {
 
 
-    private EditText eventName;
+
+private EditText eventName;
     private EditText eventLocation;
     private EditText eventDuration;
     private EditText eventType;
@@ -49,11 +58,18 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
     private EditText eventDate;
     ImageButton eventAddFriends;
     LinearLayout llFriendsListHorizontal ;
+    private ImageView ivCameraImage;
+    private ImageView ivEventBckgrndImage;
+    ImageService imgService;
+    Uri file;
+    public final static int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 200;
+
 
 
     private Button save;
     Event event;
     Trip trip;
+    String tripID;
     Boolean isWishList=false;
     public static final String WISH_LIST = "wish";
     private List<EventUser> eventUserList;
@@ -65,6 +81,66 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
         // Use `newInstance` instead as shown below
     }
 
+    @Override
+    public void onFinishAlertDialog(String photoType) {
+        pickPicture();
+    }
+
+
+    public void pickPicture() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, SELECT_IMAGE_ACTIVITY_REQUEST_CODE);
+
+    }
+
+
+
+    private void saveProfileImage(int requestCode) {
+        String filePath = null;
+        if (requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
+            filePath = imgService.getPath(file, getContext());
+        }
+
+        Bitmap bitmap = imgService.getBitMap(getContext(), filePath, file);
+        // Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(bitmap, screenSize);
+
+        ivEventBckgrndImage.setImageBitmap(bitmap);
+
+        imgService.saveParseFile(bitmap, event);
+    }
+
+
+
+   /* @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelable("TRIP_OBJ", trip);
+        savedInstanceState.putBoolean("isWishList", isWishList);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            trip = savedInstanceState.getParcelable("TRIP_OBJ");
+            isWishList = savedInstanceState.getBoolean("isWishList");
+        }
+    }*/
+
+
+        @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        if (resultCode == RESULT_OK) {
+             if (requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
+                file = imageReturnedIntent.getData();
+            }
+            saveProfileImage(requestCode);
+        }
+    }
     public static AddEventFragment newInstance(Trip trip, boolean isWishList) {
         AddEventFragment frag = new AddEventFragment();
         Bundle args = new Bundle();
@@ -165,6 +241,7 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        imgService = ImageService.getInstance();
         return inflater.inflate(R.layout.fragment_add_event, container);
     }
 
@@ -175,6 +252,7 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
 
         // Fetch arguments from bundle and set
          trip = getArguments().getParcelable("trip");
+         tripID = trip.tripID;
          isWishList = getArguments().getBoolean(WISH_LIST);
 
 
@@ -188,8 +266,15 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
          eventAddFriends = (ImageButton) view.findViewById(R.id.ibAddFriends);
         llFriendsListHorizontal = (LinearLayout) view.findViewById(R.id.llFriendsHorizontal);
         save = (Button) view.findViewById(R.id.btnEventSave);
+        ivCameraImage = (ImageView) view.findViewById(R.id.ivCameraImage);
+        ivEventBckgrndImage = (ImageView) view.findViewById(R.id.ivEventBckgrndImage);
 
 
+        if(event.eventImage != null) {
+            Glide.with(this).load(event.eventImage.toString())
+                    .fitCenter()
+                    .into(ivEventBckgrndImage);
+        }
 
         eventDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,7 +294,7 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
-                AddFriendsToEventDialogFragment addFriendsToEventDialogFragment = AddFriendsToEventDialogFragment.newInstance(trip._id);
+                AddFriendsToEventDialogFragment addFriendsToEventDialogFragment = AddFriendsToEventDialogFragment.newInstance(tripID);
                 addFriendsToEventDialogFragment.setTargetFragment(AddEventFragment.this, 300);
                 addFriendsToEventDialogFragment.show(fm, "fragment_add_users");
             }
@@ -220,6 +305,20 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
+
+
+        ivCameraImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FragmentManager fm = getFragmentManager();
+                PhotoAlertDialogFragment fdf = PhotoAlertDialogFragment.newInstance();
+                fdf.setTargetFragment(AddEventFragment.this, 300);
+                fdf.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppDialogTheme);
+                fdf.show(fm, "FRAGMENT_MODAL_ALERT");
+            }
+        });
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -229,16 +328,18 @@ public class AddEventFragment extends DialogFragment  implements CalendarDatePic
                 event.setType(eventType.getText().toString());
                 event.setDate(Long.toString(DateUtils.shiftTimeZone(eventDate.getText().toString()).getTime()));
                 event.setPrice(Double.parseDouble(eventPrice.getText().toString()));
-                event.setTripID(trip._id);
+                event.setTripID(tripID);
                 if(isWishList) event.setIsWish("Y");
                 else event.setIsWish("");
 
                 event.saveInBackground(new SaveCallback() {
                                           @Override
                                           public void done(ParseException e) {
-                                              for (EventUser pU: eventUserList) {
-                                                  pU.setEventID(event.getObjectId());
-                                                  pU.saveInBackground();
+                                              if(eventUserList !=null && eventUserList.size() >0 ) {
+                                                  for (EventUser pU : eventUserList) {
+                                                      pU.setEventID(event.getObjectId());
+                                                      pU.saveInBackground();
+                                                  }
                                               }
                                           }
                                       }

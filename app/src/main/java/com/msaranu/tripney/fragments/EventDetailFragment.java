@@ -110,6 +110,7 @@ public class EventDetailFragment extends android.support.v4.app.Fragment impleme
         fragmentBinding.tvEventType.setText(event.type);
         fragmentBinding.tvEventPrice.setText(Double.toString(event.price));
 
+
         //fragmentBinding.tvSplitLink.setText(event.type);
         fragmentBinding.tvSplitLink.setMovementMethod(LinkMovementMethod.getInstance());
         fragmentBinding.tvSplitLink.setOnClickListener(new View.OnClickListener() {
@@ -123,10 +124,11 @@ public class EventDetailFragment extends android.support.v4.app.Fragment impleme
             }
         });
 
-
-        Glide.with(this).load(R.drawable.eventimage)
-                .fitCenter()
-                .into(fragmentBinding.ivEventBckgrndImage);
+        if(event.eventImage != null) {
+            Glide.with(this).load(event.eventImage.toString())
+                    .fitCenter()
+                    .into(fragmentBinding.ivEventBckgrndImage);
+        }
 
        //setOnBackButtonListener(view);
         //SetUp Listeners

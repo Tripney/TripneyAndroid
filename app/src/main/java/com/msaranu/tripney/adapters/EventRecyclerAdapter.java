@@ -195,7 +195,8 @@ public class EventRecyclerAdapter extends
         viewHolder.binding.tvEventType.setText(event.get("type").toString());
         viewHolder.binding.tvEventPrice.setText(event.get("price").toString());
 
-        Glide.with(mContext).load(R.drawable.eventimage)
+        if(event.get("eventImage") !=null)
+        Glide.with(mContext).load(event.get("eventImage").toString())
                 .fitCenter()
                 .into(viewHolder.binding.ivEventImage);
     }

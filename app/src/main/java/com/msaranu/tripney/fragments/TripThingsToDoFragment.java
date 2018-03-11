@@ -124,7 +124,7 @@ public class TripThingsToDoFragment extends android.support.v4.app.Fragment impl
 
 
         ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
-        String tripID = trip._id;
+        String tripID = trip.tripID;
         query.whereEqualTo("tripID", tripID);
         if(isWishList)
         {

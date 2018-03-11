@@ -24,6 +24,7 @@ public class Event extends ParseObject implements Parcelable{
     public Double price;
     public String isWish;
     public String description;
+    public String eventImage;
 
 
     public Event(){
@@ -41,6 +42,7 @@ public class Event extends ParseObject implements Parcelable{
         this.date=date;
         this.isWish=isWish;
         this.description=description;
+        this.eventImage = eventImage;
 
     }
 
@@ -56,6 +58,7 @@ public class Event extends ParseObject implements Parcelable{
         date = in.readString();
         price = in.readDouble();
         description =in.readString();
+        eventImage = in.readString();
     }
 
     public void loadInstanceVariables(){
@@ -69,6 +72,7 @@ public class Event extends ParseObject implements Parcelable{
         price=getDouble("price");
         isWish=getString("isWish");
         description=getString("description");
+        eventImage = getString("eventImage");
 
 
     }
@@ -86,6 +90,8 @@ public class Event extends ParseObject implements Parcelable{
         dest.writeString(isWish);
         dest.writeDouble(price);
         dest.writeString(description);
+        dest.writeString(eventImage);
+
 
     }
 
@@ -203,5 +209,15 @@ public class Event extends ParseObject implements Parcelable{
     public void setDescription(String description) {
         this.description = description;
         this.put("description", description);
+    }
+
+    public String getEventImage() {
+        return getString("eventImage");
+    }
+
+    public void setEventImage(String eventImage) {
+        this.eventImage = eventImage;
+        this.put("eventImage", eventImage);
+
     }
 }
