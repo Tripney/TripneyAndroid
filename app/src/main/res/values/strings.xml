@@ -63,9 +63,9 @@
     <string name="state">State</string>
     <string name="zip">Zip</string>
     <string name="event_detail">Event Detail</string>
-    <string name="trip">Trip Detail</string>
-    <string name="events">Trip Events</string>
-    <string name="wishlist">Trip Wish List</string>
+    <string name="trip">Detail</string>
+    <string name="events">Events</string>
+    <string name="wishlist">Wish List</string>
     <string name="expenese">Expenses</string>
     <string name="title_activity_detail_event">DetailEventActivity</string>
     <string name="trip_name">Name</string>
@@ -86,6 +86,7 @@
     <string name="amount">1.15</string>
     <string name="percentage">%</string>
     <string name="event_add_friends">Add Friends</string>
+    <string name="friends">Friends</string>
 
 </resources>
 

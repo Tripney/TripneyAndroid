@@ -206,4 +206,14 @@ public class DateUtils {
 
         return calendar;
     }
+
+    public static String convertCalendarToDisplayDate(Calendar cal) {
+
+        SimpleDateFormat dateDisplay = new SimpleDateFormat("MMM dd, yyyy");
+        SimpleDateFormat timeDisplay = new SimpleDateFormat("hh:mm a z");
+
+        Date date = cal.getTime();
+
+        return dateDisplay.format(date) +"\n" + timeDisplay.format(date) + " " ;
+    }
 }

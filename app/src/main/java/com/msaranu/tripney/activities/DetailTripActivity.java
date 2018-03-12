@@ -36,10 +36,10 @@ public class DetailTripActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
         trip = extras.getParcelable("trip_obj");
-       // if(extras.getParcelable("item_id") !=null){
-       //     itemId  = extras.getInt("item_id");
-       // }
-       // bottomNavigationView.setSelectedItemId(itemId);
+        // if(extras.getParcelable("item_id") !=null){
+        //     itemId  = extras.getInt("item_id");
+        // }
+        // bottomNavigationView.setSelectedItemId(itemId);
 
 
         //Default Load
@@ -66,7 +66,7 @@ public class DetailTripActivity extends AppCompatActivity {
                                 return true;
 
                             case R.id.action_expenses:
-                                final FragmentTransaction fragmentExpenses= fragmentManager.beginTransaction();
+                                final FragmentTransaction fragmentExpenses = fragmentManager.beginTransaction();
                                 fragmentExpenses.replace(R.id.flContainer, TripWishListFragment.newInstance(trip)).commit();
                                 return true;
 

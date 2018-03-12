@@ -29,6 +29,9 @@ import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.services.ImageService;
 import com.msaranu.tripney.utilities.BitmapScaler;
 import com.msaranu.tripney.utilities.DateUtils;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.SaveCallback;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -40,8 +43,8 @@ import static android.app.Activity.RESULT_OK;
  * A simple {@link Fragment} subclass.
  */
 public class EditEventDialogFragment extends DialogFragment
-        implements CalendarDatePickerDialogFragment.OnDateSetListener,  RadialTimePickerDialogFragment.OnTimeSetListener,
-       PhotoAlertDialogFragment.PhotoAlertDialogFragmentListener {
+        implements CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener,
+        PhotoAlertDialogFragment.PhotoAlertDialogFragmentListener {
 
     public final static int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 200;
 
@@ -62,6 +65,7 @@ public class EditEventDialogFragment extends DialogFragment
     Event event;
     Trip trip;
     Calendar cal;
+    private ParseFile imageFile;
 
     public EditEventDialogFragment() {
         // Required empty public constructor
@@ -96,7 +100,7 @@ public class EditEventDialogFragment extends DialogFragment
 
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-        eventDate.setText(monthOfYear+1 +"/"+dayOfMonth+ "/" +year);
+        eventDate.setText(monthOfYear + 1 + "/" + dayOfMonth + "/" + year);
         callTimePicker();
     }
 
@@ -113,7 +117,7 @@ public class EditEventDialogFragment extends DialogFragment
 
     @Override
     public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
-        eventDate.setText(eventDate.getText().toString() + " " + hourOfDay + ":" + minute );
+        eventDate.setText(eventDate.getText().toString() + " " + hourOfDay + ":" + minute);
     }
 
 
@@ -125,19 +129,18 @@ public class EditEventDialogFragment extends DialogFragment
     }
 
 
-
     private void saveProfileImage(int requestCode) {
         String filePath = null;
-         if (requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
             filePath = imgService.getPath(file, getContext());
         }
 
         Bitmap bitmap = imgService.getBitMap(getContext(), filePath, file);
-       // Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(bitmap, screenSize);
+        // Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(bitmap, screenSize);
 
         ivEventBckgrndImage.setImageBitmap(bitmap);
 
-        imgService.saveParseFile(bitmap, event);
+        imageFile = imgService.getParseFile(bitmap);
     }
 
 
@@ -185,9 +188,9 @@ public class EditEventDialogFragment extends DialogFragment
         eventType.setText(event.type);
         eventPrice.setText(event.price.toString());
         eventDate.setText(cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH)
-                +" " +cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
+                + " " + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
 
-        if(event.eventImage != null) {
+        if (event.eventImage != null) {
             Glide.with(this).load(event.eventImage.toString())
                     .fitCenter()
                     .into(ivEventBckgrndImage);
@@ -204,7 +207,6 @@ public class EditEventDialogFragment extends DialogFragment
                 fdf.show(fm, "FRAGMENT_MODAL_ALERT");
             }
         });
-
 
 
         eventDate.setOnClickListener(new View.OnClickListener() {
@@ -241,8 +243,22 @@ public class EditEventDialogFragment extends DialogFragment
                 event.setDate(Long.toString(DateUtils.shiftTimeZone(eventDate.getText().toString()).getTime()));
                 event.setPrice(Double.parseDouble(eventPrice.getText().toString()));
                 event.setObjectId(event.eventID);
+                if(imageFile != null) {
 
-                event.saveInBackground();
+                    imageFile.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                event.setEventImage(imageFile.getUrl());
+                                event.saveInBackground();
+                            }
+                        }
+                    });
+                }else{
+                    event.saveInBackground();
+
+                }
+
                 EditEventFragmentDialogListener editEventFragmentDialogListener =
                         (EditEventFragmentDialogListener) getTargetFragment();
                 editEventFragmentDialogListener.onFinishEditDialog(event);

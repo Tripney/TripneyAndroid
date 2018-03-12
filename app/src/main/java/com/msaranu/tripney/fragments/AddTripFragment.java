@@ -1,6 +1,5 @@
 package com.msaranu.tripney.fragments;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,11 +26,11 @@ import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFra
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.models.TripUser;
-import com.msaranu.tripney.models.User;
 import com.msaranu.tripney.services.ImageService;
 import com.msaranu.tripney.utilities.DateUtils;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -46,14 +44,12 @@ import static android.app.Activity.RESULT_OK;
 
 
 public class AddTripFragment extends DialogFragment
- implements AddFriendsDialogFragment.AddFriendsFragmentDialogListener,
-        CalendarDatePickerDialogFragment.OnDateSetListener,  RadialTimePickerDialogFragment.OnTimeSetListener ,
-           PhotoAlertDialogFragment.PhotoAlertDialogFragmentListener {
+        implements AddFriendsDialogFragment.AddFriendsFragmentDialogListener,
+        CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener,
+        PhotoAlertDialogFragment.PhotoAlertDialogFragmentListener {
 
 
-
-
-private EditText tripName;
+    private EditText tripName;
     private EditText tripDate;
     private EditText tripDescripton;
     private EditText tripLocation;
@@ -67,6 +63,9 @@ private EditText tripName;
     private ImageView ivCameraImage;
     private ImageView ivTripBckgrndImage;
     ImageService imgService;
+    String imageURL;
+    ParseFile imageFile;
+    String tripID;
     Uri file;
     public final static int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 200;
 
@@ -93,7 +92,7 @@ private EditText tripName;
 
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-        tripDate.setText(monthOfYear+1 +"/"+dayOfMonth+ "/" +year);
+        tripDate.setText(monthOfYear + 1 + "/" + dayOfMonth + "/" + year);
         callTimePicker();
     }
 
@@ -104,7 +103,6 @@ private EditText tripName;
         startActivityForResult(photoPickerIntent, SELECT_IMAGE_ACTIVITY_REQUEST_CODE);
 
     }
-
 
 
     private void saveProfileImage(int requestCode) {
@@ -118,7 +116,7 @@ private EditText tripName;
 
         ivTripBckgrndImage.setImageBitmap(bitmap);
 
-        imgService.saveParseFile(bitmap, trip);
+        imageFile = imgService.getParseFile(bitmap);
     }
 
 
@@ -145,7 +143,7 @@ private EditText tripName;
 
     @Override
     public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
-        tripDate.setText(tripDate.getText().toString() + " " + hourOfDay + ":" + minute );
+        tripDate.setText(tripDate.getText().toString() + " " + hourOfDay + ":" + minute);
     }
 
     @Override
@@ -164,14 +162,14 @@ private EditText tripName;
     @Override
     public void onFinishAddFriendsDialog(List<TripUser> tripUserList) {
         //TODO Add horizontal scroll view here
-        this.tripUserList = tripUserList;  
-      addFriendsLayout();
+        this.tripUserList = tripUserList;
+        addFriendsLayout();
 
     }
 
     private void addFriendsLayout() {
-        
-        for(TripUser tripUser: tripUserList ){
+
+        for (TripUser tripUser : tripUserList) {
 
             ParseQuery<ParseUser> query = ParseUser.getQuery();
             query.whereEqualTo("objectId", tripUser.getUserID());
@@ -179,12 +177,12 @@ private EditText tripName;
             query.findInBackground(new FindCallback<ParseUser>() {
                 public void done(List<ParseUser> itemList, ParseException e) {
                     if (e == null) {
-                        for(ParseUser userF : itemList){
+                        for (ParseUser userF : itemList) {
 
                             usersAdded.add(userF);
 
                             LayoutInflater inflater = LayoutInflater.from(getContext());
-                            View llFriendsInnerList= inflater.inflate(R.layout.layout_friends, null, false);
+                            View llFriendsInnerList = inflater.inflate(R.layout.layout_friends, null, false);
 
                             ImageView userImage = (ImageView) llFriendsInnerList.findViewById(R.id.ivUserProfileImage);
                             TextView userName = (TextView) llFriendsInnerList.findViewById(R.id.tvName);
@@ -192,12 +190,12 @@ private EditText tripName;
                             userName.setText(userF.get("firstName").toString() + "\n" + userF.get("lastName").toString());
 
                             String profileURL;
-                            if(userF.get("profilePicture")!=null) {
+                            if (userF.get("profilePicture") != null) {
                                 Glide.with(getContext()).load(userF.get("profilePicture").toString())
                                         .fitCenter()
                                         .into(userImage);
 
-                            }else{
+                            } else {
                                 Glide.with(getContext()).load(R.drawable.ic_person)
                                         .fitCenter()
                                         .into(userImage);
@@ -207,8 +205,7 @@ private EditText tripName;
 
 
                         }
-                    }
-                    else {
+                    } else {
                         Log.d("item", "Error: " + e.getMessage());
                     }
                 }
@@ -236,18 +233,18 @@ private EditText tripName;
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         usersAdded = new ArrayList<ParseUser>();
         trip = new Trip();
+        tripID = trip.getObjectId();
         super.onViewCreated(view, savedInstanceState);
         // Get field from view
         tripName = (EditText) view.findViewById(R.id.etTripName);
         tripDescripton = (EditText) view.findViewById(R.id.etTripDescription);
         tripDate = (EditText) view.findViewById(R.id.etTripDate);
         tripLocation = (EditText) view.findViewById(R.id.etTripLocation);
-        tripAddFriends = (ImageButton)  view.findViewById(R.id.ibAddFriends);
+        tripAddFriends = (ImageButton) view.findViewById(R.id.ibAddFriends);
         llFriendsListHorizontal = (LinearLayout) view.findViewById(R.id.llFriendsHorizontal);
         save = (Button) view.findViewById(R.id.btnTripSave);
         ivCameraImage = (ImageView) view.findViewById(R.id.ivCameraImage);
         ivTripBckgrndImage = (ImageView) view.findViewById(R.id.ivTripBckgrndImage);
-
 
 
         // Fetch arguments from bundle and set title
@@ -274,7 +271,6 @@ private EditText tripName;
         });
 
 
-
         ivCameraImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -291,7 +287,7 @@ private EditText tripName;
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
-                AddFriendsDialogFragment addFriendsDialogFragment = AddFriendsDialogFragment.newInstance();
+                AddFriendsDialogFragment addFriendsDialogFragment = AddFriendsDialogFragment.newInstance((ArrayList)tripUserList, trip.tripID);
                 addFriendsDialogFragment.setTargetFragment(AddTripFragment.this, 300);
                 addFriendsDialogFragment.show(fm, "fragment_add_users");
             }
@@ -301,25 +297,36 @@ private EditText tripName;
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 trip.setmName(tripName.getText().toString());
                 trip.setmDescription(tripDescripton.getText().toString());
                 trip.setmDate(Long.toString(DateUtils.shiftTimeZone(tripDate.getText().toString()).getTime()));
                 trip.setmLocation(tripLocation.getText().toString());
                 trip.setmUserID(ParseUser.getCurrentUser().getObjectId());
                 trip.setmStatus("New");
-                trip.saveInBackground(new SaveCallback() {
-                                          @Override
-                                          public void done(ParseException e) {
-                                              if(tripUserList != null && tripUserList.size() >0) {
-                                                  for (TripUser pU : tripUserList) {
-                                                      pU.setTripID(trip.getObjectId());
-                                                      pU.saveInBackground();
-                                                  }
-                                              }
-                                          }
-                                      }
-                );
 
+                imageFile.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            trip.setMbckgrndUrl(imageFile.getUrl());
+                            trip.saveInBackground(new SaveCallback() {
+                                                      @Override
+                                                      public void done(ParseException e) {
+                                                          if (tripUserList != null && tripUserList.size() > 0) {
+                                                              for (TripUser pU : tripUserList) {
+                                                                  pU.setTripID(trip.getObjectId());
+                                                                  pU.saveInBackground();
+                                                              }
+                                                          }
+                                                      }
+                                                  }
+                            );
+
+
+                        }
+                    }
+                });
 
 
                 AddTripFragmentDialogListener addTripFragmentDialogListener =

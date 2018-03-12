@@ -8,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,6 +49,7 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
     TripRecyclerAdapter adapter;
     private TextView tvNavUserFullName;
     User user;
+    private SwipeRefreshLayout swipeContainer;
 
 
     @Override
@@ -58,6 +60,27 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.tbTripney);
         setSupportActionBar(toolbar);
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchUpdatedTrips(0);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+
 
 
         // Find our drawer view
@@ -84,6 +107,15 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
 
     }
 
+
+
+    public void fetchUpdatedTrips(int page) {
+        adapter.clear();
+        getTrips();
+        swipeContainer.setRefreshing(false);
+    }
+
+
     private void setFAB() {
         myFab = (FloatingActionButton) findViewById(R.id.fabTrip);
         myFab.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +129,7 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
 
     @Override
     public void onFinishEditDialog(Trip trip) {
-        trips.add(trip);
+        trips.add(0,trip);
         adapter.notifyDataSetChanged();
     }
 
@@ -117,19 +149,27 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
         adapter = new TripRecyclerAdapter(this, trips);
         rvTrips.setAdapter(adapter);
         rvTrips.setLayoutManager(new LinearLayoutManager(this));
+        getTrips();
+    }
 
+    private void getTrips(){
 
 
         ParseQuery<Trip> query = ParseQuery.getQuery(Trip.class);
         query.whereEqualTo("mUserID", ParseUser.getCurrentUser().getObjectId());
+        query.whereNotEqualTo("mName", null);
+        query.orderByDescending("_created_at");
+
+
         // Execute the find asynchronously
         query.findInBackground(new FindCallback<Trip>() {
             public void done(List<Trip> itemList, ParseException e) {
                 if (e == null) {
-                    for(Trip trip : itemList){
+                    trips.addAll(itemList);
+                /*    for(Trip trip : itemList){
                         trips.add(trip);
                     }
-                    Toast.makeText(MainTripActivity.this, "Message", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainTripActivity.this, "Message", Toast.LENGTH_SHORT).show();*/
                     adapter.notifyDataSetChanged();
                 } else {
                     Log.d("item", "Error: " + e.getMessage());
@@ -137,7 +177,6 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
             }
         });
     }
-
 
     private ActionBarDrawerToggle setupDrawerToggle() {
         // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
@@ -204,6 +243,10 @@ public class MainTripActivity extends AppCompatActivity implements AddTripFragme
                 break;
             case R.id.nav_settings:
                 i = new Intent(this, MainTripActivity.class);
+                break;
+            case R.id.logout:
+                ParseUser.logOut();
+                i = new Intent(this, LoginActivity.class);
                 break;
             default:
                 i = new Intent(this, MainTripActivity.class);

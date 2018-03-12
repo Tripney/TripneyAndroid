@@ -36,6 +36,7 @@ public class AddFriendsToTripAdapter extends
     RecyclerView mRecyclerView;
     // Store a member variable for the contacts
     private List<ParseUser> mPeople;
+    private List<TripUser> mexistingPeople;
     // Store the context for easy access
     private Context mContext;
     private List<TripUser> tripUserList;
@@ -50,9 +51,10 @@ public class AddFriendsToTripAdapter extends
     }
 
     // Pass in the contact array into the constructor
-    public AddFriendsToTripAdapter(Context context, List<ParseUser> people) {
+    public AddFriendsToTripAdapter(Context context, List<ParseUser> people, ArrayList<TripUser> existsPeopleList) {
         mPeople = people;
         mContext = context;
+        mexistingPeople = existsPeopleList;
     }
 
 
@@ -113,10 +115,9 @@ public class AddFriendsToTripAdapter extends
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         AddFriendsToTripAdapter.ViewHolder vh = (AddFriendsToTripAdapter.ViewHolder) viewHolder;
-        configureViewHolder(vh,mPeople.get(position), position);
+        configureViewHolder(vh, mPeople.get(position), position);
 
     }
-
 
 
     private void configureViewHolder(ViewHolder viewHolder, ParseUser person, int position) {
@@ -125,11 +126,19 @@ public class AddFriendsToTripAdapter extends
         viewHolder.binding.tvLastName.setText(person.get("lastName").toString());
         viewHolder.binding.tvUserId.setText("@" + person.get("username").toString());
 
-        if(person.get("profilePicture") !=null) {
+        if (person.get("profilePicture") != null) {
             Glide.with(mContext).load(person.get("profilePicture").toString())
                     .fitCenter()
                     .into(viewHolder.binding.ivUserProfileImage);
         }
+
+        for (TripUser tUser : mexistingPeople) {
+            if (tUser.getUserID().equals(person.getObjectId())) {
+                viewHolder.binding.ckAdd.setChecked(true);
+                viewHolder.binding.ckAdd.setEnabled(false);
+            }
+        }
+
 
         viewHolder.binding.ckAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,13 +146,14 @@ public class AddFriendsToTripAdapter extends
 
                 ParseQuery<TripUser> queryUserTrip = ParseQuery.getQuery("TripUser");
                 TripUser tUser = new TripUser();
-                if(viewHolder.binding.ckAdd.isChecked()){
+                if (viewHolder.binding.ckAdd.isChecked() && viewHolder.binding.ckAdd.isEnabled() ) {
                     tUser.setUserID(person.getObjectId().toString());
                     tUser.setStatus("Y");
-                }else{
+                } else if(!(viewHolder.binding.ckAdd.isChecked())) {
                     tUser.setUserID(person.getObjectId().toString());
                     tUser.setStatus("N");
                 }
+
                 tripUserList.add(tUser);
 
                 /*queryUserTrip.getInBackground(person.getObjectId().toString(), new GetCallback<TripUser>() {

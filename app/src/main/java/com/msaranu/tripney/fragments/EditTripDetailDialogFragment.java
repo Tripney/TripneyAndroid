@@ -30,8 +30,12 @@ import com.msaranu.tripney.models.TripUser;
 import com.msaranu.tripney.models.User;
 import com.msaranu.tripney.services.ImageService;
 import com.msaranu.tripney.utilities.DateUtils;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -42,12 +46,11 @@ import static android.app.Activity.RESULT_OK;
  * A simple {@link Fragment} subclass.
  */
 public class EditTripDetailDialogFragment extends DialogFragment implements AddFriendsDialogFragment.AddFriendsFragmentDialogListener,
-        CalendarDatePickerDialogFragment.OnDateSetListener,  RadialTimePickerDialogFragment.OnTimeSetListener,
-           PhotoAlertDialogFragment.PhotoAlertDialogFragmentListener {
+        CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener,
+        PhotoAlertDialogFragment.PhotoAlertDialogFragmentListener {
 
 
-
-private EditText tripName;
+    private EditText tripName;
     private EditText tripDate;
     private EditText tripDescripton;
     private EditText tripLocation;
@@ -55,12 +58,15 @@ private EditText tripName;
     private Spinner spinnerTrip;
     private Button save;
     Trip trip;
+    String tripID;
+    ParseFile imageFile;
     Calendar cal;
     private ImageView ivCameraImage;
-    private ImageView ivEventBckgrndImage;
+    private ImageView ivTripBckgrndImage;
     ImageService imgService;
     Uri file;
     public final static int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 200;
+    private String imageURL;
 
 
     public EditTripDetailDialogFragment() {
@@ -68,14 +74,13 @@ private EditText tripName;
     }
 
 
-
-        public static EditTripDetailDialogFragment newInstance(Trip trip) {
-            EditTripDetailDialogFragment frag = new EditTripDetailDialogFragment();
-            Bundle args = new Bundle();
-            args.putParcelable("trip", trip);
-            frag.setArguments(args);
-            return frag;
-        }
+    public static EditTripDetailDialogFragment newInstance(Trip trip) {
+        EditTripDetailDialogFragment frag = new EditTripDetailDialogFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("trip", trip);
+        frag.setArguments(args);
+        return frag;
+    }
 
     @Override
     public void onFinishAlertDialog(String photoType) {
@@ -91,7 +96,6 @@ private EditText tripName;
     }
 
 
-
     private void saveProfileImage(int requestCode) {
         String filePath = null;
         if (requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -101,9 +105,9 @@ private EditText tripName;
         Bitmap bitmap = imgService.getBitMap(getContext(), filePath, file);
         // Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(bitmap, screenSize);
 
-        ivEventBckgrndImage.setImageBitmap(bitmap);
+        ivTripBckgrndImage.setImageBitmap(bitmap);
 
-        imgService.saveParseFile(bitmap, trip);
+        imageFile = imgService.getParseFile(bitmap);
     }
 
 
@@ -116,18 +120,19 @@ private EditText tripName;
             saveProfileImage(requestCode);
         }
     }
+
     @Override
     public void onFinishAddFriendsDialog(List<TripUser> tUserList) {
 
     }
 
     public interface EditTripFragmentDialogListener {
-            void onFinishEditDialog(Trip trip);
-        }
+        void onFinishEditDialog(Trip trip);
+    }
 
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-        tripDate.setText(monthOfYear+1 +"/"+dayOfMonth+ "/" +year);
+        tripDate.setText(monthOfYear + 1 + "/" + dayOfMonth + "/" + year);
         callTimePicker();
     }
 
@@ -144,7 +149,7 @@ private EditText tripName;
 
     @Override
     public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
-        tripDate.setText(tripDate.getText().toString() + " " + hourOfDay + ":" + minute );
+        tripDate.setText(tripDate.getText().toString() + " " + hourOfDay + ":" + minute);
     }
 
     @Override
@@ -176,6 +181,7 @@ private EditText tripName;
 
         // Fetch arguments from bundle and set
         trip = getArguments().getParcelable("trip");
+        tripID = trip.tripID;
 
         cal = DateUtils.convertUTCtoLocalTime(trip.mDate);
 
@@ -184,11 +190,10 @@ private EditText tripName;
         tripDescripton = (EditText) view.findViewById(R.id.etTripDescription);
         tripDate = (EditText) view.findViewById(R.id.etTripDate);
         tripLocation = (EditText) view.findViewById(R.id.etTripLocation);
-        tripAddFriends = (ImageButton)  view.findViewById(R.id.ibAddFriends);
+        tripAddFriends = (ImageButton) view.findViewById(R.id.ibAddFriends);
         save = (Button) view.findViewById(R.id.btnTripSave);
         ivCameraImage = (ImageView) view.findViewById(R.id.ivCameraImage);
-        ivEventBckgrndImage = (ImageView) view.findViewById(R.id.ivEventBckgrndImage);
-
+        ivTripBckgrndImage = (ImageView) view.findViewById(R.id.ivTripBckgrndImage);
 
 
         //TODO: Remove boiler plate code. Swith to databinding/butterknife
@@ -196,13 +201,13 @@ private EditText tripName;
         tripName.setText(trip.mName);
         tripDescripton.setText(trip.mDescription);
         tripDate.setText(cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH)
-                +" " +cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
+                + " " + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
         tripLocation.setText(trip.mlocation);
 
-        if(trip.mbckgrndUrl != null) {
+        if (trip.mbckgrndUrl != null) {
             Glide.with(this).load(trip.mbckgrndUrl.toString())
                     .fitCenter()
-                    .into(ivEventBckgrndImage);
+                    .into(ivTripBckgrndImage);
         }
 
 
@@ -233,8 +238,6 @@ private EditText tripName;
         });
 
 
-
-
         ivCameraImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -255,9 +258,24 @@ private EditText tripName;
                 trip.setmDate(Long.toString(DateUtils.shiftTimeZone(tripDate.getText().toString()).getTime()));
                 trip.setmLocation(tripLocation.getText().toString());
                 trip.setmUserID(ParseUser.getCurrentUser().getObjectId());
-                trip.setObjectId(trip.tripID);
+                trip.setObjectId(tripID);
                 trip.setmStatus("New");
-                trip.saveInBackground();
+                if(imageFile != null) {
+                    imageFile.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                trip.setMbckgrndUrl(imageFile.getUrl());
+
+                                trip.saveInBackground();
+
+                            }
+                        }
+                    });
+                }else{
+                    trip.saveInBackground();
+                }
+
                 EditTripFragmentDialogListener editTripFragmentDialogListener =
                         (EditTripFragmentDialogListener) getTargetFragment();
                 editTripFragmentDialogListener.onFinishEditDialog(trip);
@@ -266,5 +284,6 @@ private EditText tripName;
         });
 
     }
-    }
+
+}
 

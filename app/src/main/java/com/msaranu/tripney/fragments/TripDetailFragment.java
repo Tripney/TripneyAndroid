@@ -11,10 +11,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,10 +33,16 @@ import com.msaranu.tripney.R;
 import com.msaranu.tripney.databinding.FragmentDetailTripBinding;
 import com.msaranu.tripney.models.Event;
 import com.msaranu.tripney.models.Trip;
+import com.msaranu.tripney.models.TripUser;
 import com.msaranu.tripney.utilities.DateUtils;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -42,11 +53,17 @@ import butterknife.ButterKnife;
  * Use the {@link TripDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TripDetailFragment extends android.support.v4.app.Fragment implements EditTripDetailDialogFragment.EditTripFragmentDialogListener {
+public class TripDetailFragment extends android.support.v4.app.Fragment implements EditTripDetailDialogFragment.EditTripFragmentDialogListener,
+        AddFriendsDialogFragment.AddFriendsFragmentDialogListener {
 
     MapView mMapView;
     ImageButton ivEditIcon;
     private GoogleMap googleMap;
+    private ImageButton tripAddFriends;
+    private Spinner spinnerTrip;
+    private LinearLayout llFriendsListHorizontal;
+    private List<TripUser> tripUserList;
+    private List<ParseUser> usersAdded;
 
 
     public static final String TRIP_OBJECT = "trip_obj";
@@ -73,7 +90,6 @@ public class TripDetailFragment extends android.support.v4.app.Fragment implemen
     }
 
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -85,17 +101,22 @@ public class TripDetailFragment extends android.support.v4.app.Fragment implemen
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         Calendar cal = DateUtils.convertUTCtoLocalTime(trip.mDate);
 
-            // Inflate the layout for this fragment
-        fragmentBinding =  DataBindingUtil.inflate(inflater,R.layout.fragment_detail_trip, parent, false);
-            View view = fragmentBinding.getRoot();
-            ButterKnife.bind(this, view);
-        fragmentBinding.tvTripDate.setText(cal.getTime().toString());
+        // Inflate the layout for this fragment
+        fragmentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_trip, parent, false);
+        View view = fragmentBinding.getRoot();
+        ButterKnife.bind(this, view);
+        fragmentBinding.tvTripDate.setText(DateUtils.convertCalendarToDisplayDate(cal));
         fragmentBinding.tvTripDescription.setText(trip.mDescription);
         fragmentBinding.tvTripName.setText(trip.mName);
-        fragmentBinding.tvTripStatus.setText(trip.mStatus);
+     //   fragmentBinding.tvTripStatus.setText(trip.mStatus);
+        fragmentBinding.tvTripLocation.setText(trip.mlocation);
+
+        tripAddFriends = fragmentBinding.ibAddFriends;
+        llFriendsListHorizontal = fragmentBinding.llFriendsHorizontal;
 
 
-        if(trip.mbckgrndUrl != null) {
+
+        if (trip.mbckgrndUrl != null) {
             Glide.with(this).load(trip.mbckgrndUrl)
                     .fitCenter()
                     .into(fragmentBinding.ivTripBckgrndImage);
@@ -105,10 +126,44 @@ public class TripDetailFragment extends android.support.v4.app.Fragment implemen
         setSourceSiteLinkIntentListener();
         setAddToCalendarListener();
         setEditIconListener();
-     //   setRedirectIconListener();
-      initializeMap(view,savedInstanceState);
+        setAddFriendListener();
+        loadTripUsers();
+        //   setRedirectIconListener();
+        initializeMap(view, savedInstanceState);
+
 
         return view;
+    }
+
+    private void loadTripUsers() {
+
+        ParseQuery<TripUser> query = ParseQuery.getQuery(TripUser.class);
+        query.whereEqualTo("tripID", trip.tripID);
+
+        query.findInBackground(new FindCallback<TripUser>() {
+            public void done(List<TripUser> itemList, ParseException e) {
+                if (e == null) {
+                    tripUserList = new ArrayList<>();
+                    tripUserList.addAll(itemList);
+                    addFriendsLayout();
+                } else {
+
+                }
+            }
+        });
+    }
+
+    private void setAddFriendListener() {
+        tripAddFriends = fragmentBinding.ibAddFriends;
+        tripAddFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                AddFriendsDialogFragment addFriendsDialogFragment = AddFriendsDialogFragment.newInstance((ArrayList)tripUserList, trip.tripID);
+                addFriendsDialogFragment.setTargetFragment(TripDetailFragment.this, 300);
+                addFriendsDialogFragment.show(fm, "fragment_add_users");
+            }
+        });
     }
 
     private void setEditIconListener() {
@@ -116,11 +171,12 @@ public class TripDetailFragment extends android.support.v4.app.Fragment implemen
         ivEditIcon = fragmentBinding.ivEditIcon;
         ivEditIcon.setOnClickListener(view -> {
             FragmentManager fm = getFragmentManager();
-            EditTripDetailDialogFragment editTripDetailDialogFragment =EditTripDetailDialogFragment.newInstance(trip);
+            EditTripDetailDialogFragment editTripDetailDialogFragment = EditTripDetailDialogFragment.newInstance(trip);
             editTripDetailDialogFragment.setTargetFragment(TripDetailFragment.this, 300);
             editTripDetailDialogFragment.show(fm, "fragment_edit_event");
         });
     }
+
     private void setAddToCalendarListener() {
         fragmentBinding.tvCalendar.setOnClickListener(v -> addToCalendar());
         fragmentBinding.ivCalendar.setOnClickListener(v -> addToCalendar());
@@ -134,6 +190,7 @@ public class TripDetailFragment extends android.support.v4.app.Fragment implemen
 
         try {
             MapsInitializer.initialize(getContext());
+            populateAddressMap(trip);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -143,7 +200,6 @@ public class TripDetailFragment extends android.support.v4.app.Fragment implemen
     private void setSourceSiteLinkIntentListener() {
 
     }
-
 
 
     protected void populateAddressMap(Trip t) {
@@ -173,9 +229,9 @@ public class TripDetailFragment extends android.support.v4.app.Fragment implemen
             } else {
                 googleMap.setMyLocationEnabled(true);
             }
-            LatLng latlng = new LatLng(37.7749, 122.4194);
+            LatLng latlng = new LatLng(37.7749, -122.4194);
             // For dropping a marker at a point on the Map
-           googleMap.addMarker(new MarkerOptions().position(latlng).title("New York").
+            googleMap.addMarker(new MarkerOptions().position(latlng).title("San Francisco").
                     snippet("Some address"));
 
 
@@ -249,11 +305,72 @@ public class TripDetailFragment extends android.support.v4.app.Fragment implemen
     }
 
 
+    private void addFriendsLayout() {
+
+        llFriendsListHorizontal.removeAllViews();
+        for (TripUser tripUser : tripUserList) {
+
+            ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.whereEqualTo("objectId", tripUser.get("userID").toString());
+
+            query.findInBackground(new FindCallback<ParseUser>() {
+                public void done(List<ParseUser> itemList, ParseException e) {
+                    if (e == null) {
+                        usersAdded = new ArrayList<ParseUser>();
+                        for (ParseUser userF : itemList) {
+                            usersAdded.add(userF);
+
+                            LayoutInflater inflater = LayoutInflater.from(getContext());
+                            View llFriendsInnerList = inflater.inflate(R.layout.layout_friends, null, false);
+
+                            ImageView userImage = (ImageView) llFriendsInnerList.findViewById(R.id.ivUserProfileImage);
+                            TextView userName = (TextView) llFriendsInnerList.findViewById(R.id.tvName);
+
+                            userName.setText(userF.get("firstName").toString() + "\n" + userF.get("lastName").toString());
+
+                            String profileURL;
+                            if (userF.get("profilePicture") != null) {
+                                Glide.with(getContext()).load(userF.get("profilePicture").toString())
+                                        .fitCenter()
+                                        .into(userImage);
+
+                            } else {
+                                Glide.with(getContext()).load(R.drawable.default_user_image)
+                                        .fitCenter()
+                                        .into(userImage);
+                            }
+
+                            llFriendsListHorizontal.addView(llFriendsInnerList);
+
+
+                        }
+                    } else {
+                        Log.d("item", "Error: " + e.getMessage());
+                    }
+                }
+
+            });
+
+        }
+
+    }
+
+
     @Override
     public void onFinishEditDialog(Trip trip) {
         this.trip = trip;
         getFragmentManager().beginTransaction().
                 replace(R.id.flContainer, TripDetailFragment.newInstance(trip)).commit();
     }
+
+
+    @Override
+    public void onFinishAddFriendsDialog(List<TripUser> tripUserList) {
+        //TODO Add horizontal scroll view here
+        this.tripUserList.addAll(tripUserList);
+        addFriendsLayout();
+
+    }
+
 
 }

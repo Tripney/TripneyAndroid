@@ -65,24 +65,15 @@ public class ImageService {
 
     }
 
-    public String saveParseFile(Bitmap bitmap, Trip trip) {
+
+    public ParseFile getParseFile(Bitmap bitmap) {
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100,
                 stream);
         byte[] imageBytes = stream.toByteArray();
-        final ParseFile file = new ParseFile("event_img_file", imageBytes);
-        file.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    trip.setObjectId(trip.tripID);
-                    trip.put("mbckgrndUrl", file.getUrl());
-                    trip.saveInBackground();
-                }
-            }
-        });
-        return (file.getUrl());
+        final ParseFile file = new ParseFile("img_file", imageBytes);
+        return file;
 
     }
 

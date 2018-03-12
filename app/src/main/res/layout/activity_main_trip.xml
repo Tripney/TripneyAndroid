@@ -4,75 +4,80 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-<android.support.v4.widget.DrawerLayout
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/clMainPageTripney"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:background="@color/colorWhite"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/abTripney"
+
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/clMainPageTripney"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:elevation="0dp">
+            android:background="@color/colorWhite">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/tbTripney"
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/abTripney"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:title="@string/title_activity_tripney"
-                android:theme="@style/AppTheme.AppBarOverlay"
-                android:background="@color/colorTripney"
-                app:titleTextColor="@android:color/white"
-                app:layout_scrollFlags="scroll|enterAlways" />
+                android:fitsSystemWindows="true"
+                app:elevation="0dp">
 
-        </android.support.design.widget.AppBarLayout>
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/tbTripney"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorTripney"
+                    android:theme="@style/AppTheme.AppBarOverlay"
+                    android:title="@string/title_activity_tripney"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:titleTextColor="@android:color/white" />
 
-        <LinearLayout
-            android:id="@+id/llContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            </android.support.design.widget.AppBarLayout>
 
-        <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvTrips"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-            android:background="@color/offWhite"/>
+            <LinearLayout
+                android:id="@+id/llContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </LinearLayout>
+                <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/swipeContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabTrip"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rvTrips"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/offWhite" />
+                </android.support.v4.widget.SwipeRefreshLayout>
+
+            </LinearLayout>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabTrip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                app:layout_anchor="@id/rvTrips"
+                app:layout_anchorGravity="bottom|right|end"
+                app:srcCompat="@drawable/ic_plus" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nvTrips"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            app:srcCompat="@drawable/ic_plus"
-            app:layout_anchor="@id/rvTrips"
-            app:layout_anchorGravity="bottom|right|end" />
-
-    </android.support.design.widget.CoordinatorLayout>
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nvTrips"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@android:color/white"
-        app:itemIconTint="@color/colorTripney"
-        app:itemTextColor="@color/colorTripney"
-        app:menu="@menu/drawer_view" />
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@android:color/white"
+            app:itemIconTint="@color/colorTripney"
+            app:itemTextColor="@color/colorTripney"
+            app:menu="@menu/drawer_view" />
 
 
-
-</android.support.v4.widget.DrawerLayout>
-    </layout>
+    </android.support.v4.widget.DrawerLayout>
+</layout>

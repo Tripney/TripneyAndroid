@@ -17,17 +17,11 @@ import android.widget.Button;
 
 import com.msaranu.tripney.R;
 import com.msaranu.tripney.adapters.AddFriendsToTripAdapter;
-import com.msaranu.tripney.adapters.SearchAddFriendsAdapter;
 import com.msaranu.tripney.databinding.FragmentAddFriendsDialogBinding;
-import com.msaranu.tripney.databinding.FragmentAddNewFriendsBinding;
-import com.msaranu.tripney.models.Trip;
 import com.msaranu.tripney.models.TripUser;
-import com.msaranu.tripney.models.User;
 import com.msaranu.tripney.models.UserFriend;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -41,13 +35,15 @@ import butterknife.ButterKnife;
  */
 public class AddFriendsDialogFragment extends DialogFragment {
 
-    private static final String SEARCH_STRING = "search_string";
+    private static final String TRIPUSER_LIST = "tripuserlist_string";
     ArrayList<ParseUser> peopleList;
+    ArrayList<TripUser> existsPeopleList;
     AddFriendsToTripAdapter adapter;
     String search_key;
     FragmentAddFriendsDialogBinding binding;
     ParseUser user;
     ArrayList<TripUser> tripUserList;
+    String tripID;
 
 
 
@@ -57,10 +53,11 @@ public class AddFriendsDialogFragment extends DialogFragment {
 
 
 
-    public static AddFriendsDialogFragment newInstance() {
+    public static AddFriendsDialogFragment newInstance(ArrayList<TripUser> tripUserList, String tripID) {
         AddFriendsDialogFragment addNewFriendsFragment = new AddFriendsDialogFragment();
         Bundle args = new Bundle();
-       // args.putString(SEARCH_STRING, searchStr);
+        args.putParcelableArrayList(TRIPUSER_LIST, tripUserList);
+        args.putString("tripID", tripID);
         addNewFriendsFragment.setArguments(args);
         return addNewFriendsFragment;
     }
@@ -95,11 +92,20 @@ public class AddFriendsDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             // Inflate the layout for this fragment
+        existsPeopleList = getArguments().getParcelableArrayList(TRIPUSER_LIST);
+        tripID = getArguments().getString("tripID");
         setRecyclerView(view);
         Button btnSave = (Button) view.findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (adapter.getTripUserList() != null && adapter.getTripUserList().size() > 0) {
+                    for (TripUser pU : adapter.getTripUserList()) {
+                        pU.setTripID(tripID);
+                        pU.saveInBackground();
+                    }
+                }
 
                 AddFriendsDialogFragment.AddFriendsFragmentDialogListener addFriendsFragmentDialogListener =
                         (AddFriendsDialogFragment.AddFriendsFragmentDialogListener) getTargetFragment();
@@ -122,7 +128,7 @@ public class AddFriendsDialogFragment extends DialogFragment {
         //events = Event.createTempEvents(20);
         //TODO: pass tripID and get corresponding events
        // Create adapter passing in the sample user data
-        adapter = new AddFriendsToTripAdapter(this.getContext(), peopleList);
+        adapter = new AddFriendsToTripAdapter(this.getContext(), peopleList,existsPeopleList);
         // Attach the adapter to the recyclerview to populate items
 
         rvPeople.setAdapter(adapter);

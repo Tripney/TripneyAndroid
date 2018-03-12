@@ -143,4 +143,14 @@ public class TripRecyclerAdapter extends
     public int getItemCount() {
         return mTrips.size();
     }
+
+    public void clear() {
+        mTrips.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Trip> trips) {
+        mTrips.addAll(trips);
+        notifyDataSetChanged();
+    }
 }

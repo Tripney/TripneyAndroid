@@ -31,6 +31,16 @@
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
 
+        <View
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="@android:color/darker_gray"
+            />
+
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_logout"
+            android:title="Logout" />
 
     </group>
 

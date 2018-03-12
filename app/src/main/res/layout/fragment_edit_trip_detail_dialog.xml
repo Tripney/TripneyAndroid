@@ -186,27 +186,6 @@
                     android:text='@{trip.mlocation}'
                     android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/tvTripInviteFriends"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/etTripLocation"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/trip_add_friends"
-                    android:textColor="@color/hintColor"
-                    android:textSize="14sp" />
-
-                <ImageButton
-                    android:id="@+id/ibAddFriends"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tvTripInviteFriends"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="5dp"
-                    app:srcCompat="@drawable/ic_edit" />
 
                 <LinearLayout
                     android:id="@+id/llButtons"
@@ -214,7 +193,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:layout_below="@+id/ibAddFriends"
+                    android:layout_below="@+id/etTripLocation"
                     android:layout_marginTop="5dp"
                     android:orientation="horizontal"
                     android:paddingTop="2dp">
