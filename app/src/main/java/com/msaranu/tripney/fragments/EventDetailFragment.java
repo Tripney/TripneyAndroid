@@ -102,8 +102,7 @@ public class EventDetailFragment extends android.support.v4.app.Fragment impleme
         fragmentBinding =  DataBindingUtil.inflate(inflater,R.layout.fragment_event_detail, parent, false);
         View view = fragmentBinding.getRoot();
         ButterKnife.bind(this, view);
-        fragmentBinding.tvEventDate.setText(cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH)
-                +" " +cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
+        fragmentBinding.tvEventDate.setText(DateUtils.convertCalendarToDisplayDate(cal));
         fragmentBinding.tvEventName.setText(event.name);
         fragmentBinding.tvEventLocation.setText(event.location);
         fragmentBinding.tvEventDuration.setText(event.duration);

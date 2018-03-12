@@ -308,29 +308,32 @@ public class AddEventFragment extends DialogFragment implements CalendarDatePick
                 if (isWishList) event.setIsWish("Y");
                 else event.setIsWish("");
 
-
-                imageFile.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            event.setEventImage(imageFile.getUrl());
-                            event.saveInBackground(new SaveCallback() {
-                                                       @Override
-                                                       public void done(ParseException e) {
-                                                           if (eventUserList != null && eventUserList.size() > 0) {
-                                                               for (EventUser pU : eventUserList) {
-                                                                   pU.setEventID(event.getObjectId());
-                                                                   pU.saveInBackground();
+                if(imageFile!=null) {
+                    imageFile.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                event.setEventImage(imageFile.getUrl());
+                                event.saveInBackground(new SaveCallback() {
+                                                           @Override
+                                                           public void done(ParseException e) {
+                                                               if (eventUserList != null && eventUserList.size() > 0) {
+                                                                   for (EventUser pU : eventUserList) {
+                                                                       pU.setEventID(event.getObjectId());
+                                                                       pU.saveInBackground();
+                                                                   }
                                                                }
                                                            }
                                                        }
-                                                   }
-                            );
+                                );
 
 
+                            }
                         }
-                    }
-                });
+                    });
+                }else{
+                    event.saveInBackground();
+                }
 
 
                 AddEventFragmentDialogListener addEventFragmentDialogListener =

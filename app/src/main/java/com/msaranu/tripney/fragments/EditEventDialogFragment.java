@@ -187,8 +187,7 @@ public class EditEventDialogFragment extends DialogFragment
         eventDuration.setText(event.duration);
         eventType.setText(event.type);
         eventPrice.setText(event.price.toString());
-        eventDate.setText(cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH)
-                + " " + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
+        eventDate.setText( DateUtils.convertCalendarToDisplayDateEdit(cal));
 
         if (event.eventImage != null) {
             Glide.with(this).load(event.eventImage.toString())

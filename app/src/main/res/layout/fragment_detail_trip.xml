@@ -109,7 +109,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginStart="20dp"
                         android:layout_weight="4.0"
                         android:text='Trip Name'
                         android:textColor="@color/colorBlack"
@@ -146,11 +147,11 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/spView00"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="25dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:text=""
-                    android:textColor="@color/colorBlack"
+                    android:textColor="@color/colorGrey"
                     android:textSize="13sp" />
 
                 <ImageView
@@ -159,7 +160,7 @@
                     android:layout_height="20dp"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/tvTripDescription"
-                    android:layout_marginEnd="3dp"
+                    android:layout_marginEnd="7dp"
                     app:srcCompat="@drawable/ic_clock" />
 
                 <TextView
@@ -181,7 +182,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_below="@id/tvTripDescription"
-                    android:layout_marginEnd="3dp"
+                    android:layout_marginEnd="7dp"
                     android:layout_toStartOf="@+id/tvCalendar"
                     app:srcCompat="@drawable/ic_date_range" />
 
@@ -204,7 +205,7 @@
                     android:layout_height="20dp"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/ivClockIcon"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginEnd="7dp"
                     android:layout_marginTop="30dp"
                     app:srcCompat="@drawable/ic_location_pin" />
 
@@ -239,7 +240,7 @@
                     android:layout_below="@id/spView03"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="14dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:text="@string/friends"
                     android:textColor="@color/colorTripney"
                     android:textSize="16sp" />
@@ -251,7 +252,7 @@
                     android:layout_below="@id/spView03"
                     android:layout_alignBottom="@+id/tvTripInviteFriends"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="15dp"
                     android:background="@color/colorTransparent"
                     android:layout_toEndOf="@+id/tvTripInviteFriends"
                     app:srcCompat="@drawable/ic_add_circle" />
@@ -284,7 +285,7 @@
                     android:layout_below="@id/hsview"
                     android:layout_marginEnd="-10dp"
                     android:layout_marginStart="-10dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="25dp"
                     android:background="@color/veryLightGrey" />
 
                 <com.google.android.gms.maps.MapView
@@ -293,7 +294,7 @@
                     android:layout_height="200dp"
                     android:layout_below="@id/spView02"
                     android:layout_marginBottom="15dp"
-                    android:layout_marginTop="15dp" />
+                    android:layout_marginTop="20dp" />
 
 
                 <View

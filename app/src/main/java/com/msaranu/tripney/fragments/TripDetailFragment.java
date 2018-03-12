@@ -323,6 +323,13 @@ public class TripDetailFragment extends android.support.v4.app.Fragment implemen
                             LayoutInflater inflater = LayoutInflater.from(getContext());
                             View llFriendsInnerList = inflater.inflate(R.layout.layout_friends, null, false);
 
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(
+                                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                                    ViewGroup.LayoutParams.WRAP_CONTENT));
+                            layoutParams.setMargins(5,0,25,10);
+                            llFriendsInnerList.setLayoutParams(layoutParams);
+
+
                             ImageView userImage = (ImageView) llFriendsInnerList.findViewById(R.id.ivUserProfileImage);
                             TextView userName = (TextView) llFriendsInnerList.findViewById(R.id.tvName);
 
@@ -341,7 +348,6 @@ public class TripDetailFragment extends android.support.v4.app.Fragment implemen
                             }
 
                             llFriendsListHorizontal.addView(llFriendsInnerList);
-
 
                         }
                     } else {

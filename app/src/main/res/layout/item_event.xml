@@ -34,9 +34,10 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:adjustViewBounds="true"
+                android:layout_marginStart="20dp"
                 android:scaleType="fitCenter"
                 android:layout_alignParentTop="true"
-                app:srcCompat="@mipmap/ic_launcher" />
+                app:srcCompat="@drawable/img_background" />
 
 
             <TextView
@@ -44,52 +45,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/ivEventImage"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="10dp"
                 android:text="Event Name "
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
 
-            <TextView
-                android:id="@+id/tvEventLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvEventName"
-                android:layout_alignStart="@id/tvEventName"
-                android:text="EventLocation"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvEventDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvEventLocation"
-                android:layout_alignStart="@id/tvEventLocation"
+                android:layout_below="@id/tvEventName"
+                android:layout_alignStart="@id/tvEventName"
                 android:text="Event Date"
+                android:textStyle="bold"
+                android:textSize="14sp"
                 android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
+                />
+
+
 
             <TextView
                 android:id="@+id/tvEventType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvEventDuration"
-                android:layout_alignStart="@id/tvEventDuration"
+                android:layout_below="@id/tvEventDate"
+                android:layout_alignStart="@id/tvEventName"
                 android:text="Event Type"
-                android:textSize="10sp" />
+                android:textSize="12sp"
+                android:textColor="@color/bpRed"
+                />
 
-
-            <TextView
-                android:id="@+id/tvEventPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvEventType"
-                android:layout_alignStart="@id/tvEventType"
-                android:layout_marginBottom="20dp"
-                android:text="Event Price"
-                android:textSize="10sp" />
 
 
         </RelativeLayout>

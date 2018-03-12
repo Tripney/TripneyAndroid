@@ -174,11 +174,10 @@ public class EventRecyclerAdapter extends
         Calendar cal = DateUtils.convertUTCtoLocalTime(event.get("date").toString());
 
         viewHolder.binding.tvEventName.setText(event.get("name").toString());  // setVariable(BR.user, user) would also work
-        viewHolder.binding.tvEventLocation.setText(event.get("location").toString());
-        viewHolder.binding.tvEventDate.setText(cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH)
-                +" " +cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
+      //  viewHolder.binding.tvEventLocation.setText(event.get("location").toString());
+        viewHolder.binding.tvEventDate.setText(DateUtils.convertCalendarToDisplayDateEvent(cal));
         viewHolder.binding.tvEventType.setText(event.get("type").toString());
-        viewHolder.binding.tvEventPrice.setText(event.get("price").toString());
+   //     viewHolder.binding.tvEventPrice.setText(event.get("price").toString());
 
         Glide.with(mContext).load(R.drawable.eventimage)
                 .fitCenter()
@@ -189,11 +188,10 @@ public class EventRecyclerAdapter extends
         Calendar cal = DateUtils.convertUTCtoLocalTime(event.get("date").toString());
 
         viewHolder.binding.tvEventName.setText(event.get("name").toString());  // setVariable(BR.user, user) would also work
-        viewHolder.binding.tvEventLocation.setText(event.get("location").toString());
-        viewHolder.binding.tvEventDate.setText(cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH)
-                +" " +cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
+       // viewHolder.binding.tvEventLocation.setText(event.get("location").toString());
+        viewHolder.binding.tvEventDate.setText(DateUtils.convertCalendarToDisplayDateEvent(cal));
         viewHolder.binding.tvEventType.setText(event.get("type").toString());
-        viewHolder.binding.tvEventPrice.setText(event.get("price").toString());
+       // viewHolder.binding.tvEventPrice.setText(event.get("price").toString());
 
         if(event.get("eventImage") !=null)
         Glide.with(mContext).load(event.get("eventImage").toString())
